@@ -5,8 +5,8 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 public class IssueLimitOrderCommand {
     @TargetAggregateIdentifier
-    private String id;
-    private LimitOrderDTO limitOrderDTO;
+    final private String id;
+    final private LimitOrderDTO limitOrderDTO;
 
     public IssueLimitOrderCommand(String id, LimitOrderDTO limitOrderDTO) {
         this.id = id;
@@ -17,15 +17,8 @@ public class IssueLimitOrderCommand {
         return limitOrderDTO;
     }
 
-    public void setLimitOrderDTO(LimitOrderDTO limitOrderDTO) {
-        this.limitOrderDTO = limitOrderDTO;
-    }
-
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 }

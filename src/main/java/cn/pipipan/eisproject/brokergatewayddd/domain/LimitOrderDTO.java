@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class LimitOrderDTO {
+public class LimitOrderDTO implements Order{
     static class Convert implements DTOConvert<LimitOrderDTO, LimitOrder> {
 
         @Override
@@ -27,6 +27,15 @@ public class LimitOrderDTO {
     private int count;
     private int unitPrice;
     private LimitOrder.Side side;
+    private LimitOrder.Status status;
+
+    public LimitOrder.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(LimitOrder.Status status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;

@@ -1,23 +1,23 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.event;
 
-import cn.pipipan.eisproject.brokergatewayddd.domain.LimitOrder;
+import cn.pipipan.eisproject.brokergatewayddd.domain.LimitOrderDTO;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 public class InsertLimitOrderEvent {
     @TargetAggregateIdentifier
     final String id;
-    final LimitOrder limitOrder;
+    final LimitOrderDTO limitOrderDTO;
 
-    public InsertLimitOrderEvent(String id, LimitOrder limitOrder) {
+    public InsertLimitOrderEvent(String id, LimitOrderDTO limitOrderDTO) {
         this.id = id;
-        this.limitOrder = limitOrder;
+        this.limitOrderDTO = limitOrderDTO;
     }
 
     public String getId() {
         return id;
     }
 
-    public LimitOrder getLimitOrder() {
-        return limitOrder;
+    public LimitOrderDTO getLimitOrderDTO() {
+        return limitOrderDTO;
     }
 }

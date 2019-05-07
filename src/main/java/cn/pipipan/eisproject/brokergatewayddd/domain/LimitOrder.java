@@ -17,6 +17,10 @@ public class LimitOrder {
         BUYER,
         SELLER
     }
+    static enum Status{
+        WAITING,
+        FINISHED
+    }
     static class Convert implements DTOConvert<LimitOrder, LimitOrderDTO>{
         @Override
         public LimitOrderDTO convertFrom(LimitOrder limitOrder) {
@@ -37,6 +41,7 @@ public class LimitOrder {
     private int count;
     private int unitPrice;
     private Side side;
+    private Status status;
 
     @CommandHandler
     public LimitOrder(IssueLimitOrderCommand issueLimitOrderCommand){
@@ -47,10 +52,42 @@ public class LimitOrder {
     public void on(IssueLimitOrderEvent issueLimitOrderEvent){
         BeanUtils.copyProperties(issueLimitOrderEvent.getLimitOrderDTO(), this);
         this.id = issueLimitOrderEvent.getId();
-        AggregateLifecycle.apply(new InsertLimitOrderEvent());
+        AggregateLifecycle.apply(new InsertLimitOrderEvent(this.futureId, this.convertToLimitOrderDTO()));
     }
 
     protected LimitOrder(){
 
+    }
+
+    public void decreaseCount(int delta){
+        this.count -= delta;
+    }
+
+    public boolean isBuyer(){
+        return this.side.equals(Side.BUYER);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getFutureId() {
+        return futureId;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public int getUnitPrice() {
+        return unitPrice;
+    }
+
+    public Side getSide() {
+        return side;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 }

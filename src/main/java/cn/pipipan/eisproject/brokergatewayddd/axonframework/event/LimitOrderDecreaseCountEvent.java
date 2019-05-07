@@ -1,23 +1,22 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.event;
 
-import cn.pipipan.eisproject.brokergatewayddd.domain.FutureDTO;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-public class IssueFutureEvent {
+public class LimitOrderDecreaseCountEvent {
     @TargetAggregateIdentifier
     final String id;
-    final FutureDTO future;
+    final int count;
 
-    public IssueFutureEvent(String id, FutureDTO future) {
+    public LimitOrderDecreaseCountEvent(String id, int count) {
         this.id = id;
-        this.future = future;
+        this.count = count;
     }
 
     public String getId() {
         return id;
     }
 
-    public FutureDTO getFutureDTO() {
-        return future;
+    public int getCount() {
+        return count;
     }
 }
