@@ -1,18 +1,24 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
+import cn.pipipan.eisproject.brokergatewayddd.BrokergatewayDddApplication;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.InsertLimitOrderCommand;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueLimitOrderCommand;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.InsertLimitOrderEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.IssueLimitOrderEvent;
 import cn.pipipan.eisproject.brokergatewayddd.util.DTOConvert;
 import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 @Aggregate
 public class LimitOrder {
+    Logger logger = LoggerFactory.getLogger(LimitOrder.class);
+    CommandGateway commandGateway = BrokergatewayDddApplication.ac.getBean(CommandGateway.class);
     static enum Side {
         BUYER,
         SELLER
@@ -37,7 +43,7 @@ public class LimitOrder {
 
     @AggregateIdentifier
     private String id;
-    private String futureId;
+    private String marketDepthId;
     private int count;
     private int unitPrice;
     private Side side;
@@ -52,7 +58,7 @@ public class LimitOrder {
     public void on(IssueLimitOrderEvent issueLimitOrderEvent){
         BeanUtils.copyProperties(issueLimitOrderEvent.getLimitOrderDTO(), this);
         this.id = issueLimitOrderEvent.getId();
-        AggregateLifecycle.apply(new InsertLimitOrderEvent(this.futureId, this.convertToLimitOrderDTO()));
+        commandGateway.send(new InsertLimitOrderCommand(marketDepthId, convertToLimitOrderDTO()));
     }
 
     protected LimitOrder(){
@@ -71,8 +77,8 @@ public class LimitOrder {
         return id;
     }
 
-    public String getFutureId() {
-        return futureId;
+    public String getMarketDepthId() {
+        return marketDepthId;
     }
 
     public int getCount() {
@@ -85,6 +91,34 @@ public class LimitOrder {
 
     public Side getSide() {
         return side;
+    }
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setMarketDepthId(String marketDepthId) {
+        this.marketDepthId = marketDepthId;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public void setUnitPrice(int unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public void setSide(Side side) {
+        this.side = side;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public Status getStatus() {

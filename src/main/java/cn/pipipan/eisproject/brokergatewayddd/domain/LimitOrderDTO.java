@@ -12,7 +12,7 @@ public class LimitOrderDTO implements Order{
         @Override
         public LimitOrder convertFrom(LimitOrderDTO limitOrderDTO) {
             LimitOrder limitOrder = new LimitOrder();
-            BeanUtils.copyProperties(limitOrder, limitOrderDTO);
+            BeanUtils.copyProperties(limitOrderDTO, limitOrder);
             return limitOrder;
         }
     }
@@ -23,7 +23,7 @@ public class LimitOrderDTO implements Order{
     }
     @Id
     private String id;
-    private String futureId;
+    private String marketDepthId;
     private int count;
     private int unitPrice;
     private LimitOrder.Side side;
@@ -41,12 +41,12 @@ public class LimitOrderDTO implements Order{
         return id;
     }
 
-    public String getFutureId() {
-        return futureId;
+    public String getMarketDepthId() {
+        return marketDepthId;
     }
 
-    public void setFutureId(String futureId) {
-        this.futureId = futureId;
+    public void setMarketDepthId(String marketDepthId) {
+        this.marketDepthId = marketDepthId;
     }
 
     public int getCount() {

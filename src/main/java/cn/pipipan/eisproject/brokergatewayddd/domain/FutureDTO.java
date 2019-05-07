@@ -9,6 +9,16 @@ public class FutureDTO {
     String id;
     String description;
 
+    public String getMarketDepthId() {
+        return MarketDepthId;
+    }
+
+    public void setMarketDepthId(String marketDepthId) {
+        MarketDepthId = marketDepthId;
+    }
+
+    String MarketDepthId;
+
     public String getId() {
         return id;
     }

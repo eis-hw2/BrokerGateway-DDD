@@ -13,13 +13,14 @@ import org.springframework.beans.BeanUtils;
 public class Future {
     @AggregateIdentifier
     String id;
+    String MarketDepthId;
     String description;
 
     @CommandHandler
     public Future(IssueFutureCommand issueFutureCommand){
         AggregateLifecycle.apply(new IssueFutureEvent(issueFutureCommand.getId(), issueFutureCommand.getFutureDTO()));
         try {
-            AggregateLifecycle.createNew(MarketDepth.class, () -> new MarketDepth(issueFutureCommand.getId()));
+            AggregateLifecycle.createNew(MarketDepth.class, () -> new MarketDepth(issueFutureCommand.getFutureDTO().getMarketDepthId()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -33,5 +34,29 @@ public class Future {
 
     protected Future(){
 
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getMarketDepthId() {
+        return MarketDepthId;
+    }
+
+    public void setMarketDepthId(String marketDepthId) {
+        MarketDepthId = marketDepthId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

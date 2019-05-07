@@ -19,6 +19,7 @@ public class FutureController {
 
     @PostMapping
     public void addFuture(@RequestBody FutureDTO future){
+        future.setMarketDepthId(UUID.randomUUID().toString());
         commandGateway.send(new IssueFutureCommand(UUID.randomUUID().toString(), future));
     }
 }
