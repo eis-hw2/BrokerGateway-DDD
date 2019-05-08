@@ -19,11 +19,11 @@ import org.springframework.beans.BeanUtils;
 public class LimitOrder {
     Logger logger = LoggerFactory.getLogger(LimitOrder.class);
     CommandGateway commandGateway = BrokergatewayDddApplication.ac.getBean(CommandGateway.class);
-    static enum Side {
+    public static enum Side {
         BUYER,
         SELLER
     }
-    static enum Status{
+    public static enum Status{
         WAITING,
         FINISHED
     }
@@ -60,6 +60,8 @@ public class LimitOrder {
         this.id = issueLimitOrderEvent.getId();
         commandGateway.send(new InsertLimitOrderCommand(marketDepthId, convertToLimitOrderDTO()));
     }
+
+
 
     protected LimitOrder(){
 

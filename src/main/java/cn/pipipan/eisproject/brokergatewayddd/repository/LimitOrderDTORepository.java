@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LimitOrderDTORepository extends MongoRepository<LimitOrderDTO, String> {
+    public LimitOrderDTO getLimitOrderDTOById(String id);
 }

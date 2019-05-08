@@ -2,11 +2,12 @@ package cn.pipipan.eisproject.brokergatewayddd.domain;
 
 import cn.pipipan.eisproject.brokergatewayddd.BrokergatewayDddApplication;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.InsertLimitOrderCommand;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.MarketDepthChangedCommand;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.MarketDepthFixedCommand;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.*;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.InsertLimitOrderEvent;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.IssueMarketDepthEvent;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.LimitOrderChangedEvent;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.MarketDepthChangedEvent;
 import cn.pipipan.eisproject.brokergatewayddd.util.DTOConvert;
-import javafx.util.Pair;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -31,11 +32,11 @@ public class MarketDepth {
             marketDepthDTO.id = marketDepth.id;
             for (int i=marketDepth.buyers.size()-1; i>=Math.max(0, marketDepth.buyers.size()-3); i--){
                 OrderPriceComposite orderPriceComposite = buyers.get(i);
-                marketDepthDTO.buyers.add(new Pair(orderPriceComposite.getLimitOrders().stream().mapToInt(LimitOrder::getCount).sum(), orderPriceComposite.getPrice()));
+                marketDepthDTO.addBuyer(orderPriceComposite.getLimitOrders().stream().mapToInt(LimitOrder::getCount).sum(), orderPriceComposite.getPrice());
             }
             for (int i=0; i<Math.min(3, marketDepth.sellers.size()); i++){
                 OrderPriceComposite orderPriceComposite = sellers.get(i);
-                marketDepthDTO.sellers.add(new Pair(orderPriceComposite.getLimitOrders().stream().mapToInt(LimitOrder::getCount).sum(), orderPriceComposite.getPrice()));
+                marketDepthDTO.addSeller(orderPriceComposite.getLimitOrders().stream().mapToInt(LimitOrder::getCount).sum(), orderPriceComposite.getPrice());
             }
             return marketDepthDTO;
         }
@@ -100,11 +101,6 @@ public class MarketDepth {
         AggregateLifecycle.apply(new InsertLimitOrderEvent(insertLimitOrderCommand.getId(), insertLimitOrderCommand.getLimitOrderDTO()));
     }
 
-    @CommandHandler
-    public void handle(MarketDepthChangedCommand marketDepthChangedCommand){
-//        AggregateLifecycle.apply(new MarketDepthChangedEvent(marketDepthChangedCommand.getId()));
-    }
-
     @EventSourcingHandler
     public void on(IssueMarketDepthEvent issueMarketDepthEvent){
         this.id = issueMarketDepthEvent.getId();
@@ -144,17 +140,22 @@ public class MarketDepth {
     @EventSourcingHandler
     public void on(MarketDepthChangedEvent marketDepthChangedEvent){
        if (isFixed()) commandGateway.send(new MarketDepthFixedCommand(id, convertToMarketDepthDTO()));
-//        else {
-//            OrderPriceComposite buyer = buyers.get(buyers.size() - 1);
-//            OrderPriceComposite seller = sellers.get(0);
-//            LimitOrder buyer_order = buyer.getLimitOrders().get(0);
-//            LimitOrder seller_order = seller.getLimitOrders().get(0);
-//            int delta = Math.min(buyer_order.getCount(), seller_order.getCount());
-//            decreaseCount(buyer_order, delta);
-//            decreaseCount(seller_order, delta);
-//            //TODO 生成订单
-//            AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
-//        }
+        else {
+            OrderPriceComposite buyer = buyers.get(buyers.size() - 1);
+            OrderPriceComposite seller = sellers.get(0);
+            LimitOrder buyer_order = buyer.getLimitOrders().get(0);
+            LimitOrder seller_order = seller.getLimitOrders().get(0);
+            int delta = Math.min(buyer_order.getCount(), seller_order.getCount());
+            decreaseCount(buyer_order, delta);
+            decreaseCount(seller_order, delta);
+//          //TODO 生成订单
+//           try {
+//               AggregateLifecycle.createNew(OrderBlotter.class, () -> new OrderBlotter(UUID.randomUUID().toString(), buyer_order.convertToLimitOrderDTO(), seller_order.convertToLimitOrderDTO(), delta));
+//           } catch (Exception e) {
+//               e.printStackTrace();
+//           }
+           AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
+        }
     }
 
     private void decreaseCount(LimitOrder order, int delta) {
@@ -162,13 +163,11 @@ public class MarketDepth {
         List<OrderPriceComposite> waitingComposites = order.isBuyer() ? buyers : sellers;
         int index = order.isBuyer() ? buyers.size() - 1 : 0;
         if (order.getCount() == 0) {
-            if (order.getSide() == LimitOrder.Side.BUYER){
-                List<LimitOrder> limitOrders = waitingComposites.get(index).getLimitOrders();
-                limitOrders.remove(0);
-                if (limitOrders.isEmpty()) waitingComposites.remove(index);
-            }
+            List<LimitOrder> limitOrders = waitingComposites.get(index).getLimitOrders();
+            limitOrders.remove(0);
+            if (limitOrders.isEmpty()) waitingComposites.remove(index);
         }
-        AggregateLifecycle.apply(new LimitOrderDecreaseCountEvent(order.getId(), delta));
+        AggregateLifecycle.apply(new LimitOrderChangedEvent(order.getId(), order.convertToLimitOrderDTO()));
     }
 
     private boolean isFixed(){
