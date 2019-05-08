@@ -1,6 +1,5 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
-import cn.pipipan.eisproject.brokergatewayddd.BrokergatewayDddApplication;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.InsertLimitOrderCommand;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.MarketDepthFixedCommand;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.InsertLimitOrderEvent;
@@ -16,14 +15,16 @@ import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Aggregate
+@Aggregate(snapshotTriggerDefinition = "mySnapshotTriggerDefinition")
 public class MarketDepth {
     Logger logger = LoggerFactory.getLogger(MarketDepth.class);
-    CommandGateway commandGateway = BrokergatewayDddApplication.ac.getBean(CommandGateway.class);
+    @Autowired
+    CommandGateway commandGateway;
 
     class Convert implements DTOConvert<MarketDepth, MarketDepthDTO>{
         @Override
