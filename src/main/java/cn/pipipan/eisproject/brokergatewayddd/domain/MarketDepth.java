@@ -14,9 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Aggregate(snapshotTriggerDefinition = "mySnapshotTriggerDefinition")
 public class MarketDepth {
@@ -86,8 +84,6 @@ public class MarketDepth {
 
     private List<OrderPriceComposite> sellers;
     private List<OrderPriceComposite> buyers;
-    private List<OrderBlotter> orderBlotters;
-    private Map<String, LimitOrder> limitOrders;
 
     public MarketDepth(String id) {
         AggregateLifecycle.apply(new IssueMarketDepthEvent(id));
@@ -103,17 +99,13 @@ public class MarketDepth {
         this.id = issueMarketDepthEvent.getId();
         this.buyers = new ArrayList<>();
         this.sellers = new ArrayList<>();
-        this.orderBlotters = new ArrayList<>();
-        this.limitOrders = new HashMap<>();
     }
 
     @EventSourcingHandler
     public void on(IssueLimitOrderEvent issueLimitOrderEvent){
         logger.info("onInsertLimitOrderEvent");
-        LimitOrderDTO limitOrderDTO = issueLimitOrderEvent.getLimitOrderDTO();
-        limitOrders.put(limitOrderDTO.getId(), limitOrderDTO.convertToLimitOrder());
         // insert into waiting queue;
-        LimitOrder limitOrder = limitOrderDTO.convertToLimitOrder();
+        LimitOrder limitOrder = issueLimitOrderEvent.getLimitOrderDTO().convertToLimitOrder();
         insertIntoWaitingQueue(limitOrder, limitOrder.isBuyer() ? buyers : sellers);
         AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
     }
@@ -168,19 +160,6 @@ public class MarketDepth {
 
     private boolean isFixed() {
         return buyers.isEmpty() || sellers.isEmpty() || buyers.get(buyers.size() - 1).getPrice() < sellers.get(0).getPrice();
-    }
-
-    @EventSourcingHandler
-    public void on(LimitOrderCountDecreasedEvent limitOrderCountDecreasedEvent){
-        LimitOrder limitOrder = limitOrders.get(limitOrderCountDecreasedEvent.getOrderId());
-        limitOrder.decreaseCount(limitOrderCountDecreasedEvent.getCount());
-        AggregateLifecycle.apply(new LimitOrderChangedEvent(id, limitOrder.convertToLimitOrderDTO()));
-    }
-
-    @EventSourcingHandler
-    public void on(IssueOrderBlotterEvent issueOrderBlotterEvent){
-        //TODO 创建真正的OrderBlotter
-        orderBlotters.add(new OrderBlotter());
     }
 
     protected MarketDepth() {

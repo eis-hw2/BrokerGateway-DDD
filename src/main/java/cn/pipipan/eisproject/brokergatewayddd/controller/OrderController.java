@@ -2,6 +2,7 @@ package cn.pipipan.eisproject.brokergatewayddd.controller;
 
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueLimitOrderCommand;
 import cn.pipipan.eisproject.brokergatewayddd.domain.LimitOrderDTO;
+import cn.pipipan.eisproject.brokergatewayddd.repository.LimitOrderDTORepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,9 @@ import java.util.UUID;
 public class OrderController {
     @Autowired
     CommandGateway commandGateway;
+
+    @Autowired
+    LimitOrderDTORepository limitOrderDTORepository;
 
     @PostMapping("/LimitOrder")
     public void processLimitOrder(@RequestBody LimitOrderDTO limitOrderDTO){
