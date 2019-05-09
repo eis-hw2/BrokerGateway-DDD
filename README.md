@@ -1,3 +1,21 @@
 # TODO 
-* Change the storage of Domain to a distributed service
+* ~~Future~~
+
+* ~~MarketDepth~~
+
+* ~~LimitOrder~~
+
+* MarketOrder
+
+* StopOrder
+
+* CancelOrder
+
+* Broadcast MarketDepth with websocket
+
+* QueryControllers
+
+* FIX protocal
+
+* Move Domain storage handler to another service
 
