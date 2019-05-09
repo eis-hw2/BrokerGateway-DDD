@@ -1,35 +1,29 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.event;
 
-import cn.pipipan.eisproject.brokergatewayddd.domain.Order;
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
+import cn.pipipan.eisproject.brokergatewayddd.domain.LimitOrderDTO;
 
 public class IssueOrderBlotterEvent {
-    @TargetAggregateIdentifier
     final String id;
-    final Order order1;
-    final Order order2;
-    final int count;
+    final LimitOrderDTO buyer_order;
+    final LimitOrderDTO seller_order;
+    final int delta;
 
-    public IssueOrderBlotterEvent(String id, Order order1, Order order2, int count) {
+    public IssueOrderBlotterEvent(String id, LimitOrderDTO buyer_order, LimitOrderDTO seller_order, int delta) {
         this.id = id;
-        this.order1 = order1;
-        this.order2 = order2;
-        this.count = count;
+        this.buyer_order = buyer_order;
+        this.seller_order = seller_order;
+        this.delta = delta;
     }
 
-    public int getCount() {
-        return count;
+    public LimitOrderDTO getBuyer_order() {
+        return buyer_order;
     }
 
-    public String getId() {
-        return id;
+    public LimitOrderDTO getSeller_order() {
+        return seller_order;
     }
 
-    public Order getOrder1() {
-        return order1;
-    }
-
-    public Order getOrder2() {
-        return order2;
+    public int getDelta() {
+        return delta;
     }
 }

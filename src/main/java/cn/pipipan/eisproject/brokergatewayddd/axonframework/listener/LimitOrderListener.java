@@ -1,8 +1,6 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.listener;
 
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.IssueLimitOrderEvent;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.LimitOrderChangedEvent;
-import cn.pipipan.eisproject.brokergatewayddd.domain.LimitOrder;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.LimitOrderEvent;
 import cn.pipipan.eisproject.brokergatewayddd.domain.LimitOrderDTO;
 import cn.pipipan.eisproject.brokergatewayddd.repository.LimitOrderDTORepository;
 import org.axonframework.eventhandling.EventHandler;
@@ -18,17 +16,9 @@ public class LimitOrderListener {
     LimitOrderDTORepository limitOrderDTORepository;
 
     @EventHandler
-    public void on(IssueLimitOrderEvent limitOrderEvent){
+    public void on(LimitOrderEvent limitOrderEvent){
+        logger.info("LimitOrder saved into repository");
         LimitOrderDTO limitOrderDTO = limitOrderEvent.getLimitOrderDTO();
-        limitOrderDTO.setId(limitOrderEvent.getId());
-        limitOrderDTORepository.save(limitOrderDTO);
-    }
-
-    @EventHandler
-    public void on(LimitOrderChangedEvent limitOrderChangedEvent){
-        logger.info("limitOrderChangedEvent on");
-        LimitOrderDTO limitOrderDTO = limitOrderChangedEvent.getLimitOrderDTO();
-        if (limitOrderDTO.getCount() == 0) limitOrderDTO.setStatus(LimitOrder.Status.FINISHED);
         limitOrderDTORepository.save(limitOrderDTO);
     }
 }

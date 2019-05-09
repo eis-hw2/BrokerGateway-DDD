@@ -5,9 +5,9 @@ import cn.pipipan.eisproject.brokergatewayddd.domain.FutureDTO;
 import cn.pipipan.eisproject.brokergatewayddd.repository.FutureDTORepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class FutureListener {
     @Autowired
     FutureDTORepository futureDTORepository;

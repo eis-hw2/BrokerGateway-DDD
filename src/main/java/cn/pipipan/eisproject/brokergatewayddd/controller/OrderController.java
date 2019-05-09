@@ -17,6 +17,8 @@ public class OrderController {
 
     @PostMapping("/LimitOrder")
     public void processLimitOrder(@RequestBody LimitOrderDTO limitOrderDTO){
-        commandGateway.send(new IssueLimitOrderCommand(UUID.randomUUID().toString(), limitOrderDTO));
+        String id = UUID.randomUUID().toString();
+        limitOrderDTO.setId(id);
+        commandGateway.send(new IssueLimitOrderCommand(limitOrderDTO.getMarketDepthId(), limitOrderDTO));
     }
 }

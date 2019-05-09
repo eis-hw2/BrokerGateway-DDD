@@ -1,6 +1,8 @@
 package cn.pipipan.eisproject.brokergatewayddd;
 
 import org.axonframework.common.transaction.TransactionManager;
+import org.axonframework.eventhandling.gateway.DefaultEventGateway;
+import org.axonframework.eventhandling.gateway.EventGateway;
 import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.Snapshotter;
@@ -27,6 +29,11 @@ public class BrokergatewayDddApplication {
     @Bean
     public SnapshotTriggerDefinition mySnapshotTriggerDefinition(Snapshotter snapshotter) {
         return new EventCountSnapshotTriggerDefinition(snapshotter, 500);
+    }
+
+    @Bean
+    public EventGateway eventGateway(EventStore eventStore){
+        return new DefaultEventGateway.Builder().eventBus(eventStore).build();
     }
 
     public static void main(String[] args) {
