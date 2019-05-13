@@ -7,7 +7,9 @@ import cn.pipipan.eisproject.brokergatewayddd.domain.MarketOrderDTO;
 import cn.pipipan.eisproject.brokergatewayddd.repository.MarketOrderDTORepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MarketOrderListener {
     @Autowired
     MarketOrderDTORepository marketOrderDTORepository;
@@ -22,7 +24,7 @@ public class MarketOrderListener {
     @EventHandler
     public void on(MarketOrderCountDecreasedEvent marketOrderCountDecreasedEvent){
         //logger.info("LimitOrder decrease count");
-        MarketOrderDTO marketOrderDTO = marketOrderDTORepository.findMarketOrderDTOById(marketOrderCountDecreasedEvent.getId());
+        MarketOrderDTO marketOrderDTO = marketOrderDTORepository.findMarketOrderDTOById(marketOrderCountDecreasedEvent.getOrderId());
         MarketOrder marketOrder = marketOrderDTO.convertToMarketOrder();
         marketOrder.decreaseCount(marketOrderCountDecreasedEvent.getDelta());
         marketOrderDTORepository.save(marketOrder.convertToMarketOrderDTO());

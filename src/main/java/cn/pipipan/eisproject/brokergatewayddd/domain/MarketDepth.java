@@ -143,7 +143,7 @@ public class MarketDepth {
     @EventSourcingHandler
     public void on(IssueMarketOrderEvent issueMarketOrderEvent){
         // insert into waiting queue;
-        MarketOrder marketOrder = issueMarketOrderEvent.getMarketOrderDTO().convertToMarketOrderDTO();
+        MarketOrder marketOrder = issueMarketOrderEvent.getMarketOrderDTO().convertToMarketOrder();
         insertIntoMarketOrders(marketOrder);
         AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
     }
