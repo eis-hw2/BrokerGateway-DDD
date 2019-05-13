@@ -1,9 +1,11 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.listener;
 
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.IssueLimitOrderEvent;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.LimitOrderCancelledEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.LimitOrderCountDecreasedEvent;
 import cn.pipipan.eisproject.brokergatewayddd.domain.LimitOrder;
 import cn.pipipan.eisproject.brokergatewayddd.domain.LimitOrderDTO;
+import cn.pipipan.eisproject.brokergatewayddd.domain.Status;
 import cn.pipipan.eisproject.brokergatewayddd.repository.LimitOrderDTORepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.slf4j.Logger;
@@ -30,6 +32,15 @@ public class LimitOrderListener {
         LimitOrderDTO limitOrderDTO = limitOrderDTORepository.findLimitOrderDTOById(limitOrderCountDecreasedEvent.getOrderId());
         LimitOrder limitOrder = limitOrderDTO.convertToLimitOrder();
         limitOrder.decreaseCount(limitOrderCountDecreasedEvent.getCount());
+        limitOrderDTORepository.save(limitOrder.convertToLimitOrderDTO());
+    }
+
+    @EventHandler
+    public void on(LimitOrderCancelledEvent limitOrderCancelledEvent){
+        //logger.info("LimitOrder decrease count");
+        LimitOrderDTO limitOrderDTO = limitOrderDTORepository.findLimitOrderDTOById(limitOrderCancelledEvent.getLimitOrderId());
+        LimitOrder limitOrder = limitOrderDTO.convertToLimitOrder();
+        limitOrder.setStatus(Status.CANCELLED);
         limitOrderDTORepository.save(limitOrder.convertToLimitOrderDTO());
     }
 }

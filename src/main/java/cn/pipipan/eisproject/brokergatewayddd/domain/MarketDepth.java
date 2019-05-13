@@ -1,5 +1,6 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueCancelOrderCommand;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueLimitOrderCommand;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueMarketOrderCommand;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.*;
@@ -123,6 +124,11 @@ public class MarketDepth {
         AggregateLifecycle.apply(new IssueMarketOrderEvent(id, issueMarketOrderCommand.getMarketOrderDTO()));
     }
 
+    @CommandHandler
+    public void handle(IssueCancelOrderCommand issueCancelOrderCommand){
+        AggregateLifecycle.apply(new IssueCancelOrderEvent(id, issueCancelOrderCommand.getCancelOrder()));
+    }
+
     @EventSourcingHandler
     public void on(IssueMarketDepthEvent issueMarketDepthEvent) {
         this.id = issueMarketDepthEvent.getId();
@@ -138,6 +144,45 @@ public class MarketDepth {
         LimitOrder limitOrder = issueLimitOrderEvent.getLimitOrderDTO().convertToLimitOrder();
         insertIntoWaitingQueue(limitOrder, limitOrder.isBuyer() ? buyers : sellers);
         AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
+    }
+
+    @EventSourcingHandler
+    public void on(IssueCancelOrderEvent event){
+        CancelOrder cancelOrder = event.getCancelOrder();
+        Status status = Status.FAILURE;
+        switch (cancelOrder.getTargetType()){
+            case MarketOrder:
+                for (MarketOrder marketOrder : marketOrders){
+                    if (marketOrder.getId().equals(cancelOrder.getTargetId())){
+                        marketOrders.remove(marketOrder);
+                        status = Status.FINISHED;
+                        AggregateLifecycle.apply(new MarketOrderCancelledEvent(id, marketOrder.getId()));
+                        break;
+                    }
+                }
+                break;
+            case LimitOrder:
+                List<OrderPriceComposite> waitingComposites = cancelOrder.isBuyer() ? buyers : sellers;
+                int index = binaryFindIndex(cancelOrder.getUnitPrice(), waitingComposites);
+                if (index == waitingComposites.size() || waitingComposites.get(index).getPrice() != cancelOrder.getUnitPrice())
+                    break;
+                else {
+                    List<LimitOrder> limitOrders = waitingComposites.get(index).getLimitOrders();
+                    for (LimitOrder limitOrder : limitOrders){
+                        if (limitOrder.getId().equals(cancelOrder.getTargetId())) {
+                            limitOrders.remove(limitOrder);
+                            status = Status.FINISHED;
+                            AggregateLifecycle.apply(new LimitOrderCancelledEvent(id, limitOrder.getId()));
+                            break;
+                        }
+                    }
+                }
+                break;
+            case StopOrder:
+                //TODO 取消stop order
+                break;
+        }
+        AggregateLifecycle.apply(new CancelOrderFinishedEvent(id, cancelOrder.getId(), status));
     }
 
     @EventSourcingHandler
@@ -165,9 +210,13 @@ public class MarketDepth {
     }
 
     private int binaryFindIndex(LimitOrder order, List<OrderPriceComposite> waitingComposites) {
+        return binaryFindIndex(order.getUnitPrice(), waitingComposites);
+    }
+
+    private int binaryFindIndex(int price, List<OrderPriceComposite> waitingComposites) {
         //TODO 使用二分查找
         for (int i = 0; i < waitingComposites.size(); ++i) {
-            if (waitingComposites.get(i).getPrice() >= order.getUnitPrice()) return i;
+            if (waitingComposites.get(i).getPrice() >= price) return i;
         }
         return waitingComposites.size();
     }
