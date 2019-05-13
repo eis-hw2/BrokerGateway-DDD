@@ -65,6 +65,14 @@ public class CancelOrder implements OrderDTO{
         return status;
     }
 
+    public Side getSide() {
+        return side;
+    }
+
+    public void setSide(Side side) {
+        this.side = side;
+    }
+
     public void setStatus(Status status) {
         this.status = status;
     }

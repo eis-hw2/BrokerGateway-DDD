@@ -171,6 +171,7 @@ public class MarketDepth {
                     for (LimitOrder limitOrder : limitOrders){
                         if (limitOrder.getId().equals(cancelOrder.getTargetId())) {
                             limitOrders.remove(limitOrder);
+                            if (limitOrders.isEmpty()) waitingComposites.remove(index);
                             status = Status.FINISHED;
                             AggregateLifecycle.apply(new LimitOrderCancelledEvent(id, limitOrder.getId()));
                             break;
