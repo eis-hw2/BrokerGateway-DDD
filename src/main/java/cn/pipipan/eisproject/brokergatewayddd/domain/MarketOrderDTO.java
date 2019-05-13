@@ -6,28 +6,26 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class LimitOrderDTO implements OrderDTO{
-    static class Convert implements DTOConvert<LimitOrderDTO, LimitOrder> {
-
+public class MarketOrderDTO implements OrderDTO{
+    static class Convert implements DTOConvert<MarketOrderDTO, MarketOrder> {
         @Override
-        public LimitOrder convertFrom(LimitOrderDTO limitOrderDTO) {
-            LimitOrder limitOrder = new LimitOrder();
-            BeanUtils.copyProperties(limitOrderDTO, limitOrder);
-            return limitOrder;
+        public MarketOrder convertFrom(MarketOrderDTO marketOrderDTO) {
+            MarketOrder marketOrder = new MarketOrder();
+            BeanUtils.copyProperties(marketOrderDTO, marketOrder);
+            return marketOrder;
         }
     }
 
-    public LimitOrder convertToLimitOrder(){
+    public MarketOrder convertToMarketOrder(){
         Convert convert = new Convert();
         return convert.convertFrom(this);
     }
+
     @Id
-    private String id;
+    String id;
     private String marketDepthId;
     private int count;
-    private int unitPrice;
     private Side side;
-    private Status status;
 
     public Status getStatus() {
         return status;
@@ -37,8 +35,15 @@ public class LimitOrderDTO implements OrderDTO{
         this.status = status;
     }
 
+    private Status status;
+
     public String getId() {
         return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getMarketDepthId() {
@@ -53,18 +58,6 @@ public class LimitOrderDTO implements OrderDTO{
         return count;
     }
 
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(int unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
     public Side getSide() {
         return side;
     }
@@ -73,7 +66,7 @@ public class LimitOrderDTO implements OrderDTO{
         this.side = side;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCount(int count) {
+        this.count = count;
     }
 }

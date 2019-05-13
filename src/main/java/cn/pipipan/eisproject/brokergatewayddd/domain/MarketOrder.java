@@ -2,30 +2,32 @@ package cn.pipipan.eisproject.brokergatewayddd.domain;
 
 import cn.pipipan.eisproject.brokergatewayddd.util.DTOConvert;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
-public class LimitOrderDTO implements OrderDTO{
-    static class Convert implements DTOConvert<LimitOrderDTO, LimitOrder> {
+public class MarketOrder {
 
+    public void decreaseCount(int delta) {
+        count -= delta;
+        if (count == 0) this.status = Status.FINISHED;
+    }
+
+
+    static class Convert implements DTOConvert<MarketOrder, MarketOrderDTO> {
         @Override
-        public LimitOrder convertFrom(LimitOrderDTO limitOrderDTO) {
-            LimitOrder limitOrder = new LimitOrder();
-            BeanUtils.copyProperties(limitOrderDTO, limitOrder);
-            return limitOrder;
+        public MarketOrderDTO convertFrom(MarketOrder marketOrder) {
+            MarketOrderDTO marketOrderDTO = new MarketOrderDTO();
+            BeanUtils.copyProperties(marketOrder, marketOrderDTO);
+            return marketOrderDTO;
         }
     }
 
-    public LimitOrder convertToLimitOrder(){
+    public MarketOrderDTO convertToMarketOrderDTO(){
         Convert convert = new Convert();
         return convert.convertFrom(this);
     }
-    @Id
-    private String id;
+
+    String id;
     private String marketDepthId;
     private int count;
-    private int unitPrice;
     private Side side;
     private Status status;
 
@@ -37,8 +39,20 @@ public class LimitOrderDTO implements OrderDTO{
         this.status = status;
     }
 
+
+    public boolean isBuyer(){
+        return this.side.equals(Side.BUYER);
+    }
+    public boolean isSeller() {
+        return this.side.equals(Side.SELLER);
+    }
+
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getMarketDepthId() {
@@ -57,23 +71,11 @@ public class LimitOrderDTO implements OrderDTO{
         this.count = count;
     }
 
-    public int getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(int unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
     public Side getSide() {
         return side;
     }
 
     public void setSide(Side side) {
         this.side = side;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

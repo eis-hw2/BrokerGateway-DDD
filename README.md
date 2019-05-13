@@ -5,11 +5,11 @@
 
 * ~~LimitOrder~~
 
-* MarketOrder
-
-* StopOrder
+* ~~MarketOrder~~
 
 * CancelOrder
+
+* StopOrder
 
 * Broadcast MarketDepth with websocket
 

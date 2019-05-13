@@ -1,23 +1,12 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
-import cn.pipipan.eisproject.brokergatewayddd.BrokergatewayDddApplication;
 import cn.pipipan.eisproject.brokergatewayddd.util.DTOConvert;
-import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 public class LimitOrder {
     Logger logger = LoggerFactory.getLogger(LimitOrder.class);
-    CommandGateway commandGateway = BrokergatewayDddApplication.ac.getBean(CommandGateway.class);
-    public static enum Side {
-        BUYER,
-        SELLER
-    }
-    public static enum Status{
-        WAITING,
-        FINISHED
-    }
     static class Convert implements DTOConvert<LimitOrder, LimitOrderDTO>{
         @Override
         public LimitOrderDTO convertFrom(LimitOrder limitOrder) {

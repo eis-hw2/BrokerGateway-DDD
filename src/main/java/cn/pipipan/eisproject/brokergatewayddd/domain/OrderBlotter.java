@@ -22,7 +22,7 @@ public class OrderBlotter {
     private int count;
     private int price;
 
-    public OrderBlotter(String id, Order order1, Order order2, int count){
+    public OrderBlotter(String id, OrderDTO order1, OrderDTO order2, int count){
     }
 
     public String getId() {

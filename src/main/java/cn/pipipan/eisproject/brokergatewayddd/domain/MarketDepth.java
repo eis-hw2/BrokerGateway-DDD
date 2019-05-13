@@ -1,6 +1,7 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueLimitOrderCommand;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueMarketOrderCommand;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.*;
 import cn.pipipan.eisproject.brokergatewayddd.util.DTOConvert;
 import org.axonframework.commandhandling.CommandHandler;
@@ -84,6 +85,29 @@ public class MarketDepth {
 
     private List<OrderPriceComposite> sellers;
     private List<OrderPriceComposite> buyers;
+    private List<MarketOrder> marketOrders;
+
+    private LimitOrder getFirstBuyer(){
+        return buyers.get(buyers.size() - 1).getLimitOrders().get(0);
+    }
+
+    private LimitOrder getFirstSeller(){
+        return sellers.get(0).getLimitOrders().get(0);
+    }
+
+    private MarketOrder getFirstMarketOrder() {
+        for (MarketOrder marketOrder : marketOrders){
+            if ((marketOrder.isBuyer() && !sellers.isEmpty())
+                    || (marketOrder.isSeller() && !buyers.isEmpty())) {
+                return marketOrder;
+            }
+        }
+        return null;
+    }
+
+    private boolean canMarketOrderDone() {
+        return getFirstMarketOrder() != null;
+    }
 
     public MarketDepth(String id) {
         AggregateLifecycle.apply(new IssueMarketDepthEvent(id));
@@ -94,20 +118,38 @@ public class MarketDepth {
         AggregateLifecycle.apply(new IssueLimitOrderEvent(id, issueLimitOrderCommand.getLimitOrderDTO()));
     }
 
+    @CommandHandler
+    public void handle(IssueMarketOrderCommand issueMarketOrderCommand){
+        AggregateLifecycle.apply(new IssueMarketOrderEvent(id, issueMarketOrderCommand.getMarketOrderDTO()));
+    }
+
     @EventSourcingHandler
     public void on(IssueMarketDepthEvent issueMarketDepthEvent) {
         this.id = issueMarketDepthEvent.getId();
         this.buyers = new ArrayList<>();
         this.sellers = new ArrayList<>();
+        this.marketOrders = new ArrayList<>();
     }
 
     @EventSourcingHandler
     public void on(IssueLimitOrderEvent issueLimitOrderEvent){
-        logger.info("onInsertLimitOrderEvent");
+        //logger.info("onInsertLimitOrderEvent");
         // insert into waiting queue;
         LimitOrder limitOrder = issueLimitOrderEvent.getLimitOrderDTO().convertToLimitOrder();
         insertIntoWaitingQueue(limitOrder, limitOrder.isBuyer() ? buyers : sellers);
         AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
+    }
+
+    @EventSourcingHandler
+    public void on(IssueMarketOrderEvent issueMarketOrderEvent){
+        // insert into waiting queue;
+        MarketOrder marketOrder = issueMarketOrderEvent.getMarketOrderDTO().convertToMarketOrderDTO();
+        insertIntoMarketOrders(marketOrder);
+        AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
+    }
+
+    private void insertIntoMarketOrders(MarketOrder marketOrder) {
+        marketOrders.add(marketOrder);
     }
 
     private void insertIntoWaitingQueue(LimitOrder order, List<OrderPriceComposite> waitingComposites, int i) {
@@ -133,33 +175,61 @@ public class MarketDepth {
     @EventSourcingHandler
     public void on(MarketDepthChangedEvent marketDepthChangedEvent) {
         if (isFixed()) AggregateLifecycle.apply(new MarketDepthFixedEvent(id, convertToMarketDepthDTO()));
+        else if (canMarketOrderDone()){
+            MarketOrder marketOrder = getFirstMarketOrder();
+            LimitOrder limitOrder = marketOrder.isBuyer() ? getFirstSeller() : getFirstBuyer();
+            dealWithMarketOrders(marketOrder, limitOrder);
+        }
         else {
-            OrderPriceComposite buyer = buyers.get(buyers.size() - 1);
-            OrderPriceComposite seller = sellers.get(0);
-            LimitOrder buyer_order = buyer.getLimitOrders().get(0);
-            LimitOrder seller_order = seller.getLimitOrders().get(0);
-            int delta = Math.min(buyer_order.getCount(), seller_order.getCount());
-            decreaseCount(buyer_order, delta);
-            decreaseCount(seller_order, delta);
-            AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, buyer_order.convertToLimitOrderDTO(), seller_order.convertToLimitOrderDTO(), delta));
-            AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
+            LimitOrder buyer_order = getFirstBuyer();
+            LimitOrder seller_order = getFirstSeller();
+            dealWithLimitOrders(buyer_order, seller_order);
         }
     }
 
-    private void decreaseCount(LimitOrder order, int delta) {
-        order.decreaseCount(delta);
-        List<OrderPriceComposite> waitingComposites = order.isBuyer() ? buyers : sellers;
-        int index = order.isBuyer() ? buyers.size() - 1 : 0;
-        if (order.getCount() == 0) {
+    private void dealWithMarketOrders(MarketOrder marketOrder, LimitOrder limitOrder) {
+        int delta = Math.min(marketOrder.getCount(), limitOrder.getCount());
+        decreaseMarketOrderCount(marketOrder, delta);
+        decreaseLimitOrderCount(limitOrder, delta);
+        if (marketOrder.isBuyer())
+            AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, marketOrder.convertToMarketOrderDTO(), limitOrder.convertToLimitOrderDTO(),delta));
+        else
+            AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, limitOrder.convertToLimitOrderDTO(), marketOrder.convertToMarketOrderDTO(), delta));
+        AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
+
+    }
+
+
+    private void dealWithLimitOrders(LimitOrder buyer_order, LimitOrder seller_order) {
+        int delta = Math.min(buyer_order.getCount(), seller_order.getCount());
+        decreaseLimitOrderCount(buyer_order, delta);
+        decreaseLimitOrderCount(seller_order, delta);
+        AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, buyer_order.convertToLimitOrderDTO(), seller_order.convertToLimitOrderDTO(), delta));
+        AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
+    }
+
+
+    //TODO 重构这几个函数
+    private void decreaseMarketOrderCount(MarketOrder marketOrder, int delta) {
+        marketOrder.decreaseCount(delta);
+        if (marketOrder.getCount() == 0) marketOrders.remove(marketOrder);
+        AggregateLifecycle.apply(new MarketOrderCountDecreasedEvent(id, marketOrder.getId(), delta));
+    }
+
+    private void decreaseLimitOrderCount(LimitOrder limitOrder, int delta) {
+        limitOrder.decreaseCount(delta);
+        List<OrderPriceComposite> waitingComposites = limitOrder.isBuyer() ? buyers : sellers;
+        int index = limitOrder.isBuyer() ? buyers.size() - 1 : 0;
+        if (limitOrder.getCount() == 0) {
             List<LimitOrder> limitOrders = waitingComposites.get(index).getLimitOrders();
             limitOrders.remove(0);
             if (limitOrders.isEmpty()) waitingComposites.remove(index);
         }
-        AggregateLifecycle.apply(new LimitOrderCountDecreasedEvent(id, order.getId(), delta));
+        AggregateLifecycle.apply(new LimitOrderCountDecreasedEvent(id, limitOrder.getId(), delta));
     }
 
     private boolean isFixed() {
-        return buyers.isEmpty() || sellers.isEmpty() || buyers.get(buyers.size() - 1).getPrice() < sellers.get(0).getPrice();
+        return !canMarketOrderDone() && (buyers.isEmpty() || sellers.isEmpty() || buyers.get(buyers.size() - 1).getPrice() < sellers.get(0).getPrice());
     }
 
     protected MarketDepth() {
