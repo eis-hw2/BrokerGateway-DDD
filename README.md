@@ -7,7 +7,7 @@
 
 * ~~MarketOrder~~
 
-* CancelOrder
+* ~~CancelOrder~~
 
 * StopOrder
 
