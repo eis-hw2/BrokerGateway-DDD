@@ -1,1 +1,1 @@
-java -Djava.security.egd=file:/dev/./urandom --spring.profiles.active=product -jar /app/app.jar
+java -Djava.security.egd=file:/dev/./urandom  -jar /app/app.jar --spring.profiles.active=product
