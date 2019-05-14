@@ -201,6 +201,14 @@ public class MarketDepth {
                 break;
             case StopOrder:
                 //TODO 取消stop order
+                for (StopOrder stopOrder : stopOrders){
+                    if (stopOrder.getId().equals(cancelOrder.getTargetId())){
+                        stopOrders.remove(stopOrder);
+                        status = Status.FINISHED;
+                        AggregateLifecycle.apply(new StopOrderCancelledEvent(id, stopOrder.getId()));
+                        break;
+                    }
+                }
                 break;
         }
         AggregateLifecycle.apply(new CancelOrderFinishedEvent(id, cancelOrder.getId(), status));
