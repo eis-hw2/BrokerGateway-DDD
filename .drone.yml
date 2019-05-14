@@ -11,8 +11,8 @@ pipeline:
     image: docker
     secrets: [docker_username,docker_password]
     commands:
-        - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway
-        - docker build -t registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway:master -f Dockerfile .
+        - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD registry-vpc.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway
+        - docker build -t registry-vpc.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway:master -f Dockerfile .
         - docker push registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway:master
     volumes:
         - /var/run/docker.sock:/var/run/docker.sock
