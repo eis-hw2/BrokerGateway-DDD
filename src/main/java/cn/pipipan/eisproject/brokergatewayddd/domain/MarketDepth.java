@@ -162,6 +162,8 @@ public class MarketDepth {
     @EventSourcingHandler
     public void on(IssueStopOrderEvent issueStopOrderEvent){
         stopOrders.add(issueStopOrderEvent.getStopOrder());
+        dealWithStopOrders();
+        AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
     }
 
     @EventSourcingHandler
@@ -264,16 +266,20 @@ public class MarketDepth {
             StopOrder stopOrder = iterator.next();
             if ((stopOrder.isBuyer() && stopOrder.getUnitPrice() >= seller_price)
                 || (stopOrder.isSeller() && stopOrder.getUnitPrice() <= buyer_price)) {
+                //logger.info("get the converted order");
                 switch (stopOrder.getTargetType()){
                     case LimitOrder:
                         LimitOrder limitOrder = stopOrder.convertToLimitOrder();
                         insertIntoWaitingQueue(limitOrder, limitOrder.isBuyer() ? buyers : sellers);
-                        AggregateLifecycle.apply(new StopOrderToLimitOrderConvertedEvent(id, limitOrder.convertToLimitOrderDTO()));
+                        AggregateLifecycle.apply(new StopOrderToLimitOrderConvertedEvent(id, stopOrder.getId(), limitOrder.convertToLimitOrderDTO()));
+                        break;
                     case MarketOrder:
                         MarketOrder marketOrder = stopOrder.convertToMarketOrder();
                         insertIntoMarketOrders(marketOrder);
-                        AggregateLifecycle.apply(new StopOrderToMarketOrderConvertedEvent(id, marketOrder.convertToMarketOrderDTO()));
+                        AggregateLifecycle.apply(new StopOrderToMarketOrderConvertedEvent(id, stopOrder.getId(), marketOrder.convertToMarketOrderDTO()));
+                        break;
                 }
+                iterator.remove();
             }
         }
     }
