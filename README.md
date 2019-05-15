@@ -9,13 +9,14 @@
 
 * ~~CancelOrder~~
 
-* StopOrder
+* ~~StopOrder~~
 
 * Broadcast MarketDepth with websocket
+
+* Generate Order Blotter
 
 * QueryControllers
 
 * FIX protocal
 
-* Move Domain storage handler to another service
 
