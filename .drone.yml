@@ -26,5 +26,5 @@ pipeline:
     secrets: [ssh_username, ssh_password]
     port: 22
     script:
-      - /root/shell/deployment.sh broker-gateway
+      - /root/shell/deployment.sh broker-gateway 31000
 
