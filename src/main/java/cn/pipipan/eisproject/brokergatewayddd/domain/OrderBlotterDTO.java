@@ -10,7 +10,24 @@ public class OrderBlotterDTO {
     private int count;
     private int price;
     private String creationTime;
+    private String buyerTraderName;
+    private String sellerTraderName;
 
+    public String getBuyerTraderName() {
+        return buyerTraderName;
+    }
+
+    public void setBuyerTraderName(String buyerTraderName) {
+        this.buyerTraderName = buyerTraderName;
+    }
+
+    public String getSellerTraderName() {
+        return sellerTraderName;
+    }
+
+    public void setSellerTraderName(String sellerTraderName) {
+        this.sellerTraderName = sellerTraderName;
+    }
 
     public String getCreationTime() {
         return creationTime;
