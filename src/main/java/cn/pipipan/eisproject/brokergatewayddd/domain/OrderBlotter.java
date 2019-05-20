@@ -21,6 +21,16 @@ public class OrderBlotter {
     private String id;
     private int count;
     private int price;
+    private String creationTime;
+
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 
     public OrderBlotter(String id, OrderDTO order1, OrderDTO order2, int count){
     }

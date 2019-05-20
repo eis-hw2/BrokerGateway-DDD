@@ -14,6 +14,25 @@ public class StopOrder implements OrderDTO{
     Side side;
     int unitPrice;
     Status status;
+    private String creationTime;
+    String traderName;
+
+    public String getTraderName() {
+        return traderName;
+    }
+
+    public void setTraderName(String traderName) {
+        this.traderName = traderName;
+    }
+
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 
     public LimitOrder convertToLimitOrder(){
         LimitOrder limitOrder = new LimitOrder();

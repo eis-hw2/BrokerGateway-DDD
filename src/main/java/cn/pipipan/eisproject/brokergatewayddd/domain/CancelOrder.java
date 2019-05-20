@@ -16,6 +16,24 @@ public class CancelOrder implements OrderDTO{
     String targetId;
     String marketDepthId;
     Status status;
+    String creationTime;
+    String traderName;
+
+    public String getTraderName() {
+        return traderName;
+    }
+
+    public void setTraderName(String traderName) {
+        this.traderName = traderName;
+    }
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 
     public boolean isBuyer(){
         return this.side.equals(Side.BUYER);

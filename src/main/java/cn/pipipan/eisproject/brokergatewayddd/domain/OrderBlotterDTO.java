@@ -9,6 +9,16 @@ public class OrderBlotterDTO {
     private String id;
     private int count;
     private int price;
+    private String creationTime;
+
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 
     public String getId() {
         return id;

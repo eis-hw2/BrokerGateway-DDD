@@ -23,27 +23,31 @@ public class OrderController {
     LimitOrderDTORepository limitOrderDTORepository;
 
     @PostMapping("/LimitOrder")
-    public void processLimitOrder(@RequestBody LimitOrderDTO limitOrderDTO){
+    public Response<String> processLimitOrder(@RequestBody LimitOrderDTO limitOrderDTO){
         addOrderId(limitOrderDTO);
         commandGateway.send(new IssueLimitOrderCommand(limitOrderDTO.getMarketDepthId(), limitOrderDTO));
+        return new Response<>(limitOrderDTO.getId(), 200, "OK");
     }
 
     @PostMapping("/MarketOrder")
-    public void processMarketOrder(@RequestBody MarketOrderDTO marketOrderDTO){
+    public Response<String> processMarketOrder(@RequestBody MarketOrderDTO marketOrderDTO){
         addOrderId(marketOrderDTO);
         commandGateway.send(new IssueMarketOrderCommand(marketOrderDTO.getMarketDepthId(), marketOrderDTO));
+        return new Response<>(marketOrderDTO.getId(), 200, "OK");
     }
 
     @PostMapping("/CancelOrder")
-    public void processCancelOrder(@RequestBody CancelOrder cancelOrder){
+    public Response<String> processCancelOrder(@RequestBody CancelOrder cancelOrder){
         addOrderId(cancelOrder);
         commandGateway.send(new IssueCancelOrderCommand(cancelOrder.getMarketDepthId(), cancelOrder));
+        return new Response<>(cancelOrder.getId(), 200, "OK");
     }
 
     @PostMapping("/StopOrder")
-    public void processStopOrder(@RequestBody StopOrder stopOrder){
+    public Response<String> processStopOrder(@RequestBody StopOrder stopOrder){
         addOrderId(stopOrder);
         commandGateway.send(new IssueStopOrderCommand(stopOrder.getMarketDepthId(), stopOrder));
+        return new Response<>(stopOrder.getId(), 200, "OK");
     }
 
     private void addOrderId(OrderDTO orderDTO){

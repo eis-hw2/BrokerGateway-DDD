@@ -30,6 +30,25 @@ public class MarketOrder {
     private int count;
     private Side side;
     private Status status;
+    private String creationTime;
+    String traderName;
+
+    public String getTraderName() {
+        return traderName;
+    }
+
+    public void setTraderName(String traderName) {
+        this.traderName = traderName;
+    }
+
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 
     public Status getStatus() {
         return status;

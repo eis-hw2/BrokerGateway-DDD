@@ -27,6 +27,25 @@ public class LimitOrder {
     private int unitPrice;
     private Side side;
     private Status status;
+    private String creationTime;
+    String traderName;
+
+    public String getTraderName() {
+        return traderName;
+    }
+
+    public void setTraderName(String traderName) {
+        this.traderName = traderName;
+    }
+
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 
     public void decreaseCount(int delta){
         this.count -= delta;
