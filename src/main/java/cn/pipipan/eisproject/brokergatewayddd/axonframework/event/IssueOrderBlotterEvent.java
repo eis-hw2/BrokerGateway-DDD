@@ -7,12 +7,14 @@ public class IssueOrderBlotterEvent {
     final OrderDTO buyer_order;
     final OrderDTO seller_order;
     final int delta;
+    final int price;
 
-    public IssueOrderBlotterEvent(String id, OrderDTO buyer_order, OrderDTO seller_order, int delta) {
+    public IssueOrderBlotterEvent(String id, OrderDTO buyer_order, OrderDTO seller_order, int delta, int price) {
         this.id = id;
         this.buyer_order = buyer_order;
         this.seller_order = seller_order;
         this.delta = delta;
+        this.price = price;
     }
 
     public OrderDTO getBuyer_order() {
@@ -26,4 +28,6 @@ public class IssueOrderBlotterEvent {
     public int getDelta() {
         return delta;
     }
+
+    public int getPrice() {return price;}
 }

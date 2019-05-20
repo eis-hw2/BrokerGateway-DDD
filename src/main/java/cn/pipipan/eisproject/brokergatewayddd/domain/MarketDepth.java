@@ -299,9 +299,9 @@ public class MarketDepth {
         decreaseMarketOrderCount(marketOrder, delta);
         decreaseLimitOrderCount(limitOrder, delta);
         if (marketOrder.isBuyer())
-            AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, marketOrder.convertToMarketOrderDTO(), limitOrder.convertToLimitOrderDTO(),delta));
+            AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, marketOrder.convertToMarketOrderDTO(), limitOrder.convertToLimitOrderDTO(),delta, limitOrder.getUnitPrice()));
         else
-            AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, limitOrder.convertToLimitOrderDTO(), marketOrder.convertToMarketOrderDTO(), delta));
+            AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, limitOrder.convertToLimitOrderDTO(), marketOrder.convertToMarketOrderDTO(), delta, limitOrder.getUnitPrice()));
         AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
 
     }
@@ -311,7 +311,7 @@ public class MarketDepth {
         int delta = Math.min(buyer_order.getCount(), seller_order.getCount());
         decreaseLimitOrderCount(buyer_order, delta);
         decreaseLimitOrderCount(seller_order, delta);
-        AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, buyer_order.convertToLimitOrderDTO(), seller_order.convertToLimitOrderDTO(), delta));
+        AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, buyer_order.convertToLimitOrderDTO(), seller_order.convertToLimitOrderDTO(), delta, (buyer_order.getUnitPrice() + seller_order.getUnitPrice()) / 2));
         AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
     }
 
