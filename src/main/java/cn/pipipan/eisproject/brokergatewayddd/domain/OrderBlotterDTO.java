@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Document
 public class OrderBlotterDTO {
@@ -23,6 +24,7 @@ public class OrderBlotterDTO {
 
     public static OrderBlotterDTO createOrderBlotter(IssueOrderBlotterEvent issueOrderBlotterEvent){
         OrderBlotterDTO orderBlotterDTO = new OrderBlotterDTO();
+        orderBlotterDTO.setId(UUID.randomUUID().toString());
         orderBlotterDTO.setCount(issueOrderBlotterEvent.getDelta());
         orderBlotterDTO.setPrice(issueOrderBlotterEvent.getPrice());
         orderBlotterDTO.setCreationTime(Util.getDate(new Date()));
