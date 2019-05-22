@@ -11,11 +11,9 @@
 
 * ~~StopOrder~~
 
-* Broadcast MarketDepth with websocket
+* ~~Broadcast MarketDepth with websocket~~
 
-* Generate Order Blotter
-
-* QueryControllers
+* ~~Generate Order Blotter~~
 
 * FIX protocal
 
