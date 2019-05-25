@@ -24,7 +24,7 @@ public class OrderController {
     @Autowired
     LimitOrderDTORepository limitOrderDTORepository;
 
-    @PostMapping("/LimitOrder")
+    @PostMapping("/limitOrders")
     public Response<String> processLimitOrder(@RequestBody LimitOrderDTO limitOrderDTO){
         completeOrder(limitOrderDTO);
         commandGateway.send(new IssueLimitOrderCommand(limitOrderDTO.getMarketDepthId(), limitOrderDTO));
@@ -32,21 +32,21 @@ public class OrderController {
     }
 
 
-    @PostMapping("/MarketOrder")
+    @PostMapping("/marketOrders")
     public Response<String> processMarketOrder(@RequestBody MarketOrderDTO marketOrderDTO){
         completeOrder(marketOrderDTO);
         commandGateway.send(new IssueMarketOrderCommand(marketOrderDTO.getMarketDepthId(), marketOrderDTO));
         return new Response<>(marketOrderDTO.getId(), 200, "OK");
     }
 
-    @PostMapping("/CancelOrder")
+    @PostMapping("/cancelOrders")
     public Response<String> processCancelOrder(@RequestBody CancelOrder cancelOrder){
         completeOrder(cancelOrder);
         commandGateway.send(new IssueCancelOrderCommand(cancelOrder.getMarketDepthId(), cancelOrder));
         return new Response<>(cancelOrder.getId(), 200, "OK");
     }
 
-    @PostMapping("/StopOrder")
+    @PostMapping("/stopOrders")
     public Response<String> processStopOrder(@RequestBody StopOrder stopOrder){
         completeOrder(stopOrder);
         commandGateway.send(new IssueStopOrderCommand(stopOrder.getMarketDepthId(), stopOrder));
