@@ -44,7 +44,7 @@ public class JWTBasicFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
 
 
-        try{
+        try {
             Claims claims = Jwts.parser().setSigningKey("MyJwtSecret")
                     .parseClaimsJws(token.replace("Bearer ", ""))
                     .getBody();
@@ -68,10 +68,9 @@ public class JWTBasicFilter extends BasicAuthenticationFilter {
                 authorities.add(new SimpleGrantedAuthority("admin"));
                 return new UsernamePasswordAuthenticationToken(username, null, authorities);
             }
+            return null;
         }
         catch (Exception e){
-        }
-        finally {
             return null;
         }
     }

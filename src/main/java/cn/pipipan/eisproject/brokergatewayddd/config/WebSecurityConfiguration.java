@@ -2,8 +2,9 @@ package cn.pipipan.eisproject.brokergatewayddd.config;
 
 import cn.pipipan.eisproject.brokergatewayddd.Filter.JWTBasicFilter;
 import cn.pipipan.eisproject.brokergatewayddd.Filter.JWTLoginFilter;
-import cn.pipipan.eisproject.brokergatewayddd.util.CustomAuthenticationProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,9 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    AuthenticationProvider customAuthenticationProvider;
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(new CustomAuthenticationProvider());
+        auth.authenticationProvider(customAuthenticationProvider);
     }
 
     @Override

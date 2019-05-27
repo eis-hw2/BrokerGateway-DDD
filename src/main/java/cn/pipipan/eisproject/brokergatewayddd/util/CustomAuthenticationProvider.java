@@ -1,26 +1,28 @@
 package cn.pipipan.eisproject.brokergatewayddd.util;
 
-import cn.pipipan.eisproject.brokergatewayddd.repository.TraderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+@Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
-    TraderRepository traderRepository;
+    UserDetailsService customUserDetailsService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-        if (traderRepository.findTraderByTraderNameEqualsAndPasswordEquals(username, password) == null) {
-            throw new UsernameNotFoundException("密码错误");
-        }
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        if (userDetails == null) throw new UsernameNotFoundException("密码错误");
         return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
     }
 
