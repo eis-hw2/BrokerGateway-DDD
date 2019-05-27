@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -27,7 +26,7 @@ public class OrderController {
     LimitOrderDTORepository limitOrderDTORepository;
 
     @PostMapping("/limitOrders")
-    public Response<String> processLimitOrder(@RequestBody LimitOrderDTO limitOrderDTO){
+    public Response<String> processLimitOrder(LimitOrderDTO limitOrderDTO){
         completeOrder(limitOrderDTO);
         commandGateway.send(new IssueLimitOrderCommand(limitOrderDTO.getMarketDepthId(), limitOrderDTO));
         return new Response<>(limitOrderDTO.getId(), 200, "OK");
@@ -35,21 +34,21 @@ public class OrderController {
 
 
     @PostMapping("/marketOrders")
-    public Response<String> processMarketOrder(@RequestBody MarketOrderDTO marketOrderDTO){
+    public Response<String> processMarketOrder(MarketOrderDTO marketOrderDTO){
         completeOrder(marketOrderDTO);
         commandGateway.send(new IssueMarketOrderCommand(marketOrderDTO.getMarketDepthId(), marketOrderDTO));
         return new Response<>(marketOrderDTO.getId(), 200, "OK");
     }
 
     @PostMapping("/cancelOrders")
-    public Response<String> processCancelOrder(@RequestBody CancelOrder cancelOrder){
+    public Response<String> processCancelOrder(CancelOrder cancelOrder){
         completeOrder(cancelOrder);
         commandGateway.send(new IssueCancelOrderCommand(cancelOrder.getMarketDepthId(), cancelOrder));
         return new Response<>(cancelOrder.getId(), 200, "OK");
     }
 
     @PostMapping("/stopOrders")
-    public Response<String> processStopOrder(@RequestBody StopOrder stopOrder){
+    public Response<String> processStopOrder(StopOrder stopOrder){
         completeOrder(stopOrder);
         commandGateway.send(new IssueStopOrderCommand(stopOrder.getMarketDepthId(), stopOrder));
         return new Response<>(stopOrder.getId(), 200, "OK");

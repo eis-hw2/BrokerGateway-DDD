@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class JWTBasicFilter extends BasicAuthenticationFilter {
@@ -51,17 +50,6 @@ public class JWTBasicFilter extends BasicAuthenticationFilter {
 
             //得到用户名
             String username = claims.getSubject();
-
-            //得到过期时间
-            Date expiration = claims.getExpiration();
-
-            //判断是否过期
-            Date now = new Date();
-
-//        if (now.getTime() > expiration.getTime()) {
-//            throw new UsernameNotFoundException("该账号已过期,请重新登陆");
-//        }
-
 
             if (username != null) {
                 List<GrantedAuthority> authorities = new ArrayList<>();
