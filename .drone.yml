@@ -22,9 +22,9 @@ pipeline:
 
   deploy:
     image: appleboy/drone-ssh
-    host: pipipan.cn
+    host: http://202.120.40.8
     secrets: [ssh_username, ssh_password]
-    port: 22
+    port: 30250
     script:
       - /root/shell/deployment.sh broker-gateway 30251
 
