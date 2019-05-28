@@ -22,7 +22,7 @@ pipeline:
 
   deploy:
     image: appleboy/drone-ssh
-    host: http://202.120.40.8
+    host: 202.120.40.8
     secrets: [ssh_username, ssh_password]
     port: 30250
     script:
