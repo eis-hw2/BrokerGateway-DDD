@@ -12,7 +12,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers("/trader").permitAll()
+                .antMatchers("/futures").permitAll()
                 .antMatchers("/trace/users/**").permitAll()
                 // swagger start
                 .antMatchers("/swagger-ui.html").permitAll()
