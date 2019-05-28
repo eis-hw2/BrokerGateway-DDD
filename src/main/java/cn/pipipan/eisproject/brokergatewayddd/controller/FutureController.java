@@ -5,6 +5,7 @@ import cn.pipipan.eisproject.brokergatewayddd.domain.FutureDTO;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,7 @@ public class FutureController {
     CommandGateway commandGateway;
 
     @PostMapping
-    public void addFuture(FutureDTO future){
+    public void addFuture(@RequestBody FutureDTO future){
         future.setMarketDepthId(UUID.randomUUID().toString());
         commandGateway.send(new IssueFutureCommand(UUID.randomUUID().toString(), future));
     }
