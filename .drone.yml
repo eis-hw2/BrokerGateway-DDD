@@ -26,5 +26,5 @@ pipeline:
     secrets: [ssh_username, ssh_password]
     port: 30250
     script:
-      - /root/shell/deployment.sh broker-gateway 30251
+      - /root/shell/deployment-axon.sh broker-gateway 30251
 
