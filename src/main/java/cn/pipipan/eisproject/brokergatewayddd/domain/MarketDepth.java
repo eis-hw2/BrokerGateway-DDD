@@ -256,7 +256,7 @@ public class MarketDepth {
     @EventSourcingHandler
     public void on(MarketDepthChangedEvent marketDepthChangedEvent) {
         dealWithStopOrders();
-        if (isFixed()) AggregateLifecycle.apply(new MarketDepthFixedEvent(id, convertToMarketDepthDTO()));
+        if (isFixed()) AggregateLifecycle.apply(new MarketDepthFixedEvent(id, convertToMarketDepthDTO(), marketQuotation.clone()));
         else if (canMarketOrderDone()){
             MarketOrder marketOrder = getFirstMarketOrder();
             LimitOrder limitOrder = marketOrder.isBuyer() ? getFirstSeller() : getFirstBuyer();
@@ -301,12 +301,11 @@ public class MarketDepth {
         int delta = Math.min(marketOrder.getCount(), limitOrder.getCount());
         decreaseMarketOrderCount(marketOrder, delta);
         decreaseLimitOrderCount(limitOrder, delta);
-        if (marketOrder.isBuyer())
-            AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, marketOrder.convertToMarketOrderDTO(), limitOrder.convertToLimitOrderDTO(),delta, limitOrder.getUnitPrice()));
-        else
-            AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, limitOrder.convertToLimitOrderDTO(), marketOrder.convertToMarketOrderDTO(), delta, limitOrder.getUnitPrice()));
+        OrderBlotterDTO orderBlotterDTO = marketOrder.isBuyer() ? OrderBlotterDTO.createOrderBlotter(delta, limitOrder.getUnitPrice(), marketOrder.convertToMarketOrderDTO(), limitOrder.convertToLimitOrderDTO()) :
+                OrderBlotterDTO.createOrderBlotter(delta, limitOrder.getUnitPrice(), limitOrder.convertToLimitOrderDTO(), marketOrder.convertToMarketOrderDTO());
+        marketQuotation.update(orderBlotterDTO);
+        AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, orderBlotterDTO));
         AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
-
     }
 
 
@@ -314,9 +313,14 @@ public class MarketDepth {
         int delta = Math.min(buyer_order.getCount(), seller_order.getCount());
         decreaseLimitOrderCount(buyer_order, delta);
         decreaseLimitOrderCount(seller_order, delta);
-        //TODO 修改MarketQuot
-        AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, buyer_order.convertToLimitOrderDTO(), seller_order.convertToLimitOrderDTO(), delta, (buyer_order.getUnitPrice() + seller_order.getUnitPrice()) / 2));
+        OrderBlotterDTO orderBlotterDTO = OrderBlotterDTO.createOrderBlotter(delta, calculatePrice(buyer_order, seller_order), buyer_order.convertToLimitOrderDTO(), seller_order.convertToLimitOrderDTO());
+        marketQuotation.update(orderBlotterDTO);
+        AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, orderBlotterDTO));
         AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
+    }
+
+    private int calculatePrice(LimitOrder buyer_order, LimitOrder seller_order) {
+        return 1;
     }
 
 

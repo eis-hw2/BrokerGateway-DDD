@@ -1,6 +1,5 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.IssueOrderBlotterEvent;
 import cn.pipipan.eisproject.brokergatewayddd.helper.Util;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,19 +20,16 @@ public class OrderBlotterDTO {
     private String sellerOrderId;
     private String marketDepthId;
 
-
-    public static OrderBlotterDTO createOrderBlotter(IssueOrderBlotterEvent issueOrderBlotterEvent){
+    public static OrderBlotterDTO createOrderBlotter(int delta, int price, OrderDTO buyer, OrderDTO seller){
         OrderBlotterDTO orderBlotterDTO = new OrderBlotterDTO();
         orderBlotterDTO.setId(UUID.randomUUID().toString());
-        orderBlotterDTO.setCount(issueOrderBlotterEvent.getDelta());
-        orderBlotterDTO.setPrice(issueOrderBlotterEvent.getPrice());
+        orderBlotterDTO.setCount(delta);
+        orderBlotterDTO.setPrice(price);
         orderBlotterDTO.setCreationTime(Util.getDate(new Date()));
-        OrderDTO buyer = issueOrderBlotterEvent.getBuyer_order(); OrderDTO seller = issueOrderBlotterEvent.getSeller_order();
         orderBlotterDTO.setBuyerTraderName(buyer.getTraderName()); orderBlotterDTO.setSellerTraderName(seller.getTraderName());
         orderBlotterDTO.setBuyerOrderId(buyer.getId()); orderBlotterDTO.setSellerOrderId(seller.getId());
         return orderBlotterDTO;
     }
-
     public String getBuyerOrderId() {
         return buyerOrderId;
     }

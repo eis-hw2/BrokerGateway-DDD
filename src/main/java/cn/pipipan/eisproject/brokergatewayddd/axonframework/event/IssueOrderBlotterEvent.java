@@ -1,33 +1,17 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.event;
 
-import cn.pipipan.eisproject.brokergatewayddd.domain.OrderDTO;
+import cn.pipipan.eisproject.brokergatewayddd.domain.OrderBlotterDTO;
 
 public class IssueOrderBlotterEvent {
     final String id;
-    final OrderDTO buyer_order;
-    final OrderDTO seller_order;
-    final int delta;
-    final int price;
+    final OrderBlotterDTO orderBlotterDTO;
 
-    public IssueOrderBlotterEvent(String id, OrderDTO buyer_order, OrderDTO seller_order, int delta, int price) {
+    public IssueOrderBlotterEvent(String id, OrderBlotterDTO orderBlotterDTO) {
         this.id = id;
-        this.buyer_order = buyer_order;
-        this.seller_order = seller_order;
-        this.delta = delta;
-        this.price = price;
+        this.orderBlotterDTO = orderBlotterDTO;
     }
 
-    public OrderDTO getBuyer_order() {
-        return buyer_order;
+    public OrderBlotterDTO getOrderBlotterDTO() {
+        return orderBlotterDTO;
     }
-
-    public OrderDTO getSeller_order() {
-        return seller_order;
-    }
-
-    public int getDelta() {
-        return delta;
-    }
-
-    public int getPrice() {return price;}
 }

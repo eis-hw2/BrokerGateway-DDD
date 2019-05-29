@@ -1,5 +1,7 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
+import org.springframework.beans.BeanUtils;
+
 public class MarketQuotation {
     private float lastClosePrice;
     private float openPrice;
@@ -39,6 +41,15 @@ public class MarketQuotation {
         if(price < lowPrice || lowPrice == 0){
             setLowPrice(price);
         }
+    }
+
+    public MarketQuotation() {
+    }
+
+    public MarketQuotation clone(){
+        MarketQuotation marketQuotation = new MarketQuotation();
+        BeanUtils.copyProperties(this, marketQuotation);
+        return marketQuotation;
     }
 
     public String getDate() {
