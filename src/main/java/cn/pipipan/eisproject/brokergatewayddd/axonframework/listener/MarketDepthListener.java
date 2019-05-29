@@ -25,6 +25,7 @@ public class MarketDepthListener {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("marketQuotation", JSON.toJSONString(marketDepthFixedEvent.getMarketQuotation()));
         jsonObject.addProperty("marketDepth", JSON.toJSONString(marketDepthFixedEvent.getMarketDepthDTO()));
+        jsonObject.addProperty("marketDepthId", marketDepthFixedEvent.getMarketQuotation().getMarketDepthId());
         logger.info("jsonObject: {}", jsonObject.toString());
         rabbitTemplate.convertAndSend("marketDepth", "marketDepth", jsonObject.toString());
         marketDepthDTORepository.save(marketDepthFixedEvent.getMarketDepthDTO());
