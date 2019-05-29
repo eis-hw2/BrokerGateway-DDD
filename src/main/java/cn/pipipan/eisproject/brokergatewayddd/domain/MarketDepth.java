@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -320,7 +321,9 @@ public class MarketDepth {
     }
 
     private int calculatePrice(LimitOrder buyer_order, LimitOrder seller_order) {
-        return 1;
+        Date buyer_order_date = Util.parseString(buyer_order.getCreationTime());
+        Date seller_order_date = Util.parseString(seller_order.getCreationTime());
+        return buyer_order_date.before(seller_order_date) ? buyer_order.getUnitPrice() : seller_order.getUnitPrice();
     }
 
 
