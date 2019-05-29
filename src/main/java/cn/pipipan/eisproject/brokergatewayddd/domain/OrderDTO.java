@@ -7,4 +7,5 @@ public interface OrderDTO {
     public String getTraderName();
     public String getId();
     public String getMarketDepthId();
+    public void setStatus(Status waiting);
 }

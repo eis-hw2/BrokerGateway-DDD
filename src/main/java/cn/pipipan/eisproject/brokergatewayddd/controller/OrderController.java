@@ -75,12 +75,16 @@ public class OrderController {
         addOrderId(orderDTO);
         addCreationTime(orderDTO);
         addTraderName(orderDTO);
+        addStatus(orderDTO);
+    }
+
+    private void addStatus(OrderDTO orderDTO) {
+        orderDTO.setStatus(Status.WAITING);
     }
 
     private void addTraderName(OrderDTO orderDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String traderName = authentication.getName();
         orderDTO.setTraderName(traderName);
-
     }
 }

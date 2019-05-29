@@ -28,6 +28,8 @@ public class MarketOrderDTO implements OrderDTO{
     private Side side;
     private String creationTime;
     String traderName;
+    private Status status;
+
 
     public String getTraderName() {
         return traderName;
@@ -53,8 +55,6 @@ public class MarketOrderDTO implements OrderDTO{
     public void setStatus(Status status) {
         this.status = status;
     }
-
-    private Status status;
 
     public String getId() {
         return id;

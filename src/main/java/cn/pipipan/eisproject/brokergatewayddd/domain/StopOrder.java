@@ -1,5 +1,6 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,6 +13,7 @@ public class StopOrder implements OrderDTO{
     String marketDepthId;
     int count;
     Side side;
+    @ApiModelProperty(notes = "数据冗余，用来快速定位LimitOrder所在位置")
     int unitPrice;
     Status status;
     private String creationTime;
