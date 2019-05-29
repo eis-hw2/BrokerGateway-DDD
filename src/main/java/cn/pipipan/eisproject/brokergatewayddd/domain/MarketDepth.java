@@ -1,9 +1,6 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueCancelOrderCommand;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueLimitOrderCommand;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueMarketOrderCommand;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueStopOrderCommand;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.*;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.*;
 import cn.pipipan.eisproject.brokergatewayddd.domain.NullObject.NullBuyerLimitOrder;
 import cn.pipipan.eisproject.brokergatewayddd.domain.NullObject.NullSellerLimitOrder;
@@ -19,10 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Aggregate(snapshotTriggerDefinition = "mySnapshotTriggerDefinition")
 public class MarketDepth {
@@ -143,6 +137,16 @@ public class MarketDepth {
     @CommandHandler
     public void handle(IssueStopOrderCommand issueStopOrderCommand){
         AggregateLifecycle.apply(new IssueStopOrderEvent(id, issueStopOrderCommand.getStopOrder()));
+    }
+
+    @CommandHandler
+    public void handle(OpenMarketCommand openMarketCommand){
+        AggregateLifecycle.apply(new MarketOpenedEvent(id));
+    }
+
+    @CommandHandler
+    public void handle(CloseMarketCommand closeMarketCommand){
+        AggregateLifecycle.apply(new MarketClosedEvent(id, Util.getNowDate()));
     }
 
     @EventSourcingHandler
@@ -350,6 +354,26 @@ public class MarketDepth {
     }
 
     protected MarketDepth() {
+
+    }
+
+    @EventSourcingHandler
+    public void on(MarketOpenedEvent marketOpenedEvent){
+        marketQuotation.setId(UUID.randomUUID().toString());
+        marketQuotation.setDate(Util.getNowDate());
+        buyers.clear();
+        sellers.clear();
+        marketOrders.clear();
+        stopOrders.clear();
+    }
+
+    @EventSourcingHandler
+    public void on(MarketClosedEvent marketClosedEvent){
+        AggregateLifecycle.apply(new IssueMarketQuotationEvent(id, marketQuotation.clone()));
+        clearMarket();
+    }
+
+    private void clearMarket() {
 
     }
 }

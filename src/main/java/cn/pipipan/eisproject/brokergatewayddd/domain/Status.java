@@ -4,5 +4,6 @@ public enum Status {
     WAITING,
     FINISHED,
     FAILURE,
-    CANCELLED
+    CANCELLED,
+    OUTDATED
 }

@@ -2,6 +2,8 @@ package cn.pipipan.eisproject.brokergatewayddd.domain;
 
 import org.springframework.beans.BeanUtils;
 
+import java.util.UUID;
+
 public class MarketQuotation {
     private float lastClosePrice;
     private float openPrice;
@@ -15,16 +17,25 @@ public class MarketQuotation {
     private int totalShare = 1000;
     private float turnoverRate;
     private String date;
+    private String marketDepthId;
     private String id;
 
-    MarketQuotation(String currentDate, float lastClosePrice, String id){
+    MarketQuotation(String currentDate, float lastClosePrice, String marketDepthId){
         setDate(currentDate);
         setLastClosePrice(lastClosePrice);
         setOpenPrice(lastClosePrice);
         setHighPrice(lastClosePrice);
         setLowPrice(lastClosePrice);
-        setId(date+id);
-        return;
+        setId(UUID.randomUUID().toString());
+        setMarketDepthId(marketDepthId);
+    }
+
+    public String getMarketDepthId() {
+        return marketDepthId;
+    }
+
+    public void setMarketDepthId(String marketDepthId) {
+        this.marketDepthId = marketDepthId;
     }
 
     public void update(OrderBlotterDTO orderBlotter){
