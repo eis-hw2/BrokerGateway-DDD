@@ -3,7 +3,7 @@ package cn.pipipan.eisproject.brokergatewayddd.axonframework.command;
 import cn.pipipan.eisproject.brokergatewayddd.domain.MarketOrderDTO;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-public class IssueMarketOrderCommand {
+public class IssueMarketOrderCommand implements IssueOrderCommand{
     @TargetAggregateIdentifier
     String marketDepthId;
     MarketOrderDTO marketOrderDTO;

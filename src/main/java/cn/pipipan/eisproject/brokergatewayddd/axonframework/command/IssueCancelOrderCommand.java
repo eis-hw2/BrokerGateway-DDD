@@ -3,7 +3,7 @@ package cn.pipipan.eisproject.brokergatewayddd.axonframework.command;
 import cn.pipipan.eisproject.brokergatewayddd.domain.CancelOrder;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-public class IssueCancelOrderCommand {
+public class IssueCancelOrderCommand implements IssueOrderCommand{
     @TargetAggregateIdentifier
     final String id;
     final CancelOrder cancelOrder;

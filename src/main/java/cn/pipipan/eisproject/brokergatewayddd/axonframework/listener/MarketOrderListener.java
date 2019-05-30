@@ -1,6 +1,5 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.listener;
 
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.IssueMarketOrderEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.MarketOrderCancelledEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.MarketOrderCountDecreasedEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.StopOrderToMarketOrderConvertedEvent;
@@ -17,11 +16,11 @@ public class MarketOrderListener {
     @Autowired
     MarketOrderDTORepository marketOrderDTORepository;
 
-    @EventHandler
-    public void on(IssueMarketOrderEvent issueMarketOrderEvent){
-        MarketOrderDTO marketOrderDTO = issueMarketOrderEvent.getMarketOrderDTO();
-        marketOrderDTORepository.save(marketOrderDTO);
-    }
+//    @EventHandler
+//    public void on(IssueMarketOrderEvent issueMarketOrderEvent){
+//        MarketOrderDTO marketOrderDTO = issueMarketOrderEvent.getMarketOrderDTO();
+//        marketOrderDTORepository.save(marketOrderDTO);
+//    }
 
     @EventHandler
     public void on(MarketOrderCountDecreasedEvent marketOrderCountDecreasedEvent){

@@ -3,7 +3,7 @@ package cn.pipipan.eisproject.brokergatewayddd.axonframework.command;
 import cn.pipipan.eisproject.brokergatewayddd.domain.StopOrder;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-public class IssueStopOrderCommand {
+public class IssueStopOrderCommand implements IssueOrderCommand{
     @TargetAggregateIdentifier
     final String marketDepthId;
     final StopOrder stopOrder;

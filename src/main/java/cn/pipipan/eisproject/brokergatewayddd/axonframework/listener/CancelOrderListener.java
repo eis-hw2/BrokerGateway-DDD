@@ -1,7 +1,6 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.listener;
 
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.CancelOrderFinishedEvent;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.IssueCancelOrderEvent;
 import cn.pipipan.eisproject.brokergatewayddd.domain.CancelOrder;
 import cn.pipipan.eisproject.brokergatewayddd.repository.CancelOrderRepository;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -13,10 +12,10 @@ public class CancelOrderListener {
     @Autowired
     CancelOrderRepository cancelOrderRepository;
 
-    @EventSourcingHandler
-    public void on(IssueCancelOrderEvent issueCancelOrderEvent){
-        cancelOrderRepository.save(issueCancelOrderEvent.getCancelOrder());
-    }
+//    @EventSourcingHandler
+//    public void on(IssueCancelOrderEvent issueCancelOrderEvent){
+//        cancelOrderRepository.save(issueCancelOrderEvent.getCancelOrder());
+//    }
 
     @EventSourcingHandler
     public void on(CancelOrderFinishedEvent cancelOrderFinishedEvent){

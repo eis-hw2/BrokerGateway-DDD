@@ -3,7 +3,7 @@ package cn.pipipan.eisproject.brokergatewayddd.axonframework.command;
 import cn.pipipan.eisproject.brokergatewayddd.domain.LimitOrderDTO;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-public class IssueLimitOrderCommand {
+public class IssueLimitOrderCommand implements IssueOrderCommand{
     @TargetAggregateIdentifier
     final private String id;
     final private LimitOrderDTO limitOrderDTO;

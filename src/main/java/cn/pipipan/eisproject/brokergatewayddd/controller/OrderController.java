@@ -1,12 +1,12 @@
 package cn.pipipan.eisproject.brokergatewayddd.controller;
 
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueCancelOrderCommand;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueLimitOrderCommand;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueMarketOrderCommand;
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueStopOrderCommand;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.*;
 import cn.pipipan.eisproject.brokergatewayddd.domain.*;
 import cn.pipipan.eisproject.brokergatewayddd.helper.Util;
+import cn.pipipan.eisproject.brokergatewayddd.repository.CancelOrderRepository;
 import cn.pipipan.eisproject.brokergatewayddd.repository.LimitOrderDTORepository;
+import cn.pipipan.eisproject.brokergatewayddd.repository.MarketOrderDTORepository;
+import cn.pipipan.eisproject.brokergatewayddd.repository.StopOrderRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,39 +26,66 @@ public class OrderController {
 
     @Autowired
     CommandGateway commandGateway;
-
     @Autowired
     LimitOrderDTORepository limitOrderDTORepository;
+    @Autowired
+    MarketOrderDTORepository marketOrderDTORepository;
+    @Autowired
+    CancelOrderRepository cancelOrderRepository;
+    @Autowired
+    StopOrderRepository stopOrderRepository;
 
     @PostMapping("/limitOrders")
-    public Response<String> processLimitOrder(@RequestBody LimitOrderDTO limitOrderDTO){
+    public Response<LimitOrderDTO> processLimitOrder(@RequestBody LimitOrderDTO limitOrderDTO){
         completeOrder(limitOrderDTO);
-        commandGateway.send(new IssueLimitOrderCommand(limitOrderDTO.getMarketDepthId(), limitOrderDTO));
-        return new Response<>(limitOrderDTO.getId(), 200, "OK");
+        try{
+            commandGateway.send(new IssueLimitOrderCommand(limitOrderDTO.getMarketDepthId(), limitOrderDTO)).get();
+            LimitOrderDTO res = limitOrderDTORepository.save(limitOrderDTO);
+            return new Response<>(res, 200, "OK");
+        }
+        catch (Exception e){
+            return new Response<>(null, 500, e.getMessage());
+        }
     }
 
 
     @PostMapping("/marketOrders")
-    public Response<String> processMarketOrder(@RequestBody MarketOrderDTO marketOrderDTO){
+    public Response<MarketOrderDTO> processMarketOrder(@RequestBody MarketOrderDTO marketOrderDTO){
         completeOrder(marketOrderDTO);
-        logger.info("marketDepthId: {}", marketOrderDTO.getMarketDepthId());
-        logger.info("side: {}", marketOrderDTO.getSide());
-        commandGateway.send(new IssueMarketOrderCommand(marketOrderDTO.getMarketDepthId(), marketOrderDTO));
-        return new Response<>(marketOrderDTO.getId(), 200, "OK");
+        try {
+            commandGateway.send(new IssueMarketOrderCommand(marketOrderDTO.getMarketDepthId(), marketOrderDTO)).get();
+            MarketOrderDTO res = marketOrderDTORepository.save(marketOrderDTO);
+            return new Response<>(res, 200, "OK");
+        }
+        catch (Exception e){
+            return new Response<>(null, 500, e.getMessage());
+        }
     }
 
     @PostMapping("/cancelOrders")
-    public Response<String> processCancelOrder(@RequestBody CancelOrder cancelOrder){
+    public Response<CancelOrder> processCancelOrder(@RequestBody CancelOrder cancelOrder){
         completeOrder(cancelOrder);
-        commandGateway.send(new IssueCancelOrderCommand(cancelOrder.getMarketDepthId(), cancelOrder));
-        return new Response<>(cancelOrder.getId(), 200, "OK");
+        try{
+            commandGateway.send(new IssueCancelOrderCommand(cancelOrder.getMarketDepthId(), cancelOrder)).get();
+            CancelOrder res = cancelOrderRepository.save(cancelOrder);
+            return new Response<>(res, 200, "OK");
+        }
+        catch (Exception e){
+            return new Response<>(null, 500, e.getMessage());
+        }
     }
 
     @PostMapping("/stopOrders")
-    public Response<String> processStopOrder(@RequestBody StopOrder stopOrder){
+    public Response<StopOrder> processStopOrder(@RequestBody StopOrder stopOrder){
         completeOrder(stopOrder);
-        commandGateway.send(new IssueStopOrderCommand(stopOrder.getMarketDepthId(), stopOrder));
-        return new Response<>(stopOrder.getId(), 200, "OK");
+        try{
+            commandGateway.send(new IssueStopOrderCommand(stopOrder.getMarketDepthId(), stopOrder)).get();
+            StopOrder res = stopOrderRepository.save(stopOrder);
+            return new Response<>(res, 200, "OK");
+        }
+        catch (Exception e){
+            return new Response<>(null, 500, e.getMessage());
+        }
     }
 
     private void addOrderId(OrderDTO orderDTO){

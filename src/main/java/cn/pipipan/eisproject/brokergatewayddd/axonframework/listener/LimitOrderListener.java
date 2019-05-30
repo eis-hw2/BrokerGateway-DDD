@@ -1,6 +1,5 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.listener;
 
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.IssueLimitOrderEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.LimitOrderCancelledEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.LimitOrderCountDecreasedEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.StopOrderToLimitOrderConvertedEvent;
@@ -20,12 +19,12 @@ public class LimitOrderListener {
     @Autowired
     LimitOrderDTORepository limitOrderDTORepository;
 
-    @EventHandler
-    public void on(IssueLimitOrderEvent limitOrderEvent){
-        //logger.info("LimitOrder saved into repository");
-        LimitOrderDTO limitOrderDTO = limitOrderEvent.getLimitOrderDTO();
-        limitOrderDTORepository.save(limitOrderDTO);
-    }
+//    @EventHandler
+//    public void on(IssueLimitOrderEvent limitOrderEvent){
+//        //logger.info("LimitOrder saved into repository");
+//        LimitOrderDTO limitOrderDTO = limitOrderEvent.getLimitOrderDTO();
+//        limitOrderDTORepository.save(limitOrderDTO);
+//    }
 
     @EventHandler
     public void on(LimitOrderCountDecreasedEvent limitOrderCountDecreasedEvent){
