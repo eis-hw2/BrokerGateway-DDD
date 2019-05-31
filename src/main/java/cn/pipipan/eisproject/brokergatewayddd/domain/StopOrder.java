@@ -9,11 +9,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class StopOrder implements OrderDTO{
     @Id
     String id;
+    @ApiModelProperty(required = true)
     Type targetType;
+    @ApiModelProperty(required = true)
     String marketDepthId;
+    @ApiModelProperty(required = true)
     int count;
+    @ApiModelProperty(required = true)
     Side side;
-    @ApiModelProperty(notes = "数据冗余，用来快速定位LimitOrder所在位置")
+    @ApiModelProperty(notes = "如果是MarketOrder就不需要，如果是LimitOrder就需要", required = true)
     int unitPrice;
     Status status;
     private String creationTime;

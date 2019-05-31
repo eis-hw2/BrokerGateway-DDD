@@ -1,6 +1,7 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
 import cn.pipipan.eisproject.brokergatewayddd.util.DTOConvert;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,9 +24,13 @@ public class LimitOrderDTO implements OrderDTO{
     }
     @Id
     private String id;
+    @ApiModelProperty(required = true)
     private String marketDepthId;
+    @ApiModelProperty(required = true)
     private int count;
+    @ApiModelProperty(required = true)
     private int unitPrice;
+    @ApiModelProperty(required = true)
     private Side side;
     private Status status;
     private String creationTime;

@@ -9,11 +9,13 @@ public class CancelOrder implements OrderDTO{
     @Id
     String id;
     Type targetType;
-    @ApiModelProperty(notes = "target for limit order")
+    @ApiModelProperty(notes = "为了快速找到LimitOrder位置, 如果是LimitOrder就填", required = true)
     int unitPrice;
-    @ApiModelProperty(notes = "target for limit order")
+    @ApiModelProperty(notes = "为了快速找到LimitOrder位置， 如果是LimitOrder就填", required = true)
     Side side;
+    @ApiModelProperty(required = true)
     String targetId;
+    @ApiModelProperty(required = true)
     String marketDepthId;
     Status status;
     String creationTime;
