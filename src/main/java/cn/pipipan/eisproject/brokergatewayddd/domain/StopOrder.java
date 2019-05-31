@@ -19,6 +19,8 @@ public class StopOrder implements OrderDTO{
     Side side;
     @ApiModelProperty(notes = "如果是MarketOrder就不需要，如果是LimitOrder就需要", required = true)
     int unitPrice;
+    @ApiModelProperty(required = true, notes = "止损价格")
+    int stopPrice;
     Status status;
     private String creationTime;
     String traderName;
@@ -106,6 +108,14 @@ public class StopOrder implements OrderDTO{
 
     public void setUnitPrice(int unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public int getStopPrice() {
+        return stopPrice;
+    }
+
+    public void setStopPrice(int stopPrice) {
+        this.stopPrice = stopPrice;
     }
 
     public boolean isBuyer() {

@@ -280,8 +280,8 @@ public class MarketDepth {
         Iterator<StopOrder> iterator = stopOrders.iterator();
         while(iterator.hasNext()){
             StopOrder stopOrder = iterator.next();
-            if ((stopOrder.isBuyer() && stopOrder.getUnitPrice() >= seller_price)
-                || (stopOrder.isSeller() && stopOrder.getUnitPrice() <= buyer_price)) {
+            if ((stopOrder.isBuyer() && stopOrder.getStopPrice() >= seller_price)
+                || (stopOrder.isSeller() && stopOrder.getStopPrice() <= buyer_price)) {
                 //logger.info("get the converted order");
                 switch (stopOrder.getTargetType()){
                     case LimitOrder:
