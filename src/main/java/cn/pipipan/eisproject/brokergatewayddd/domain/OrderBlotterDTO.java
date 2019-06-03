@@ -20,7 +20,7 @@ public class OrderBlotterDTO {
     private String sellerOrderId;
     private String marketDepthId;
 
-    public static OrderBlotterDTO createOrderBlotter(int delta, int price, OrderDTO buyer, OrderDTO seller){
+    public static OrderBlotterDTO createOrderBlotter(int delta, int price, OrderDTO buyer, OrderDTO seller, String marketDepthId){
         OrderBlotterDTO orderBlotterDTO = new OrderBlotterDTO();
         orderBlotterDTO.setId(UUID.randomUUID().toString());
         orderBlotterDTO.setCount(delta);
@@ -28,6 +28,7 @@ public class OrderBlotterDTO {
         orderBlotterDTO.setCreationTime(Util.getDate(new Date()));
         orderBlotterDTO.setBuyerTraderName(buyer.getTraderName()); orderBlotterDTO.setSellerTraderName(seller.getTraderName());
         orderBlotterDTO.setBuyerOrderId(buyer.getId()); orderBlotterDTO.setSellerOrderId(seller.getId());
+        orderBlotterDTO.setMarketDepthId(marketDepthId);
         return orderBlotterDTO;
     }
     public String getBuyerOrderId() {

@@ -306,8 +306,8 @@ public class MarketDepth {
         int delta = Math.min(marketOrder.getCount(), limitOrder.getCount());
         decreaseMarketOrderCount(marketOrder, delta);
         decreaseLimitOrderCount(limitOrder, delta);
-        OrderBlotterDTO orderBlotterDTO = marketOrder.isBuyer() ? OrderBlotterDTO.createOrderBlotter(delta, limitOrder.getUnitPrice(), marketOrder.convertToMarketOrderDTO(), limitOrder.convertToLimitOrderDTO()) :
-                OrderBlotterDTO.createOrderBlotter(delta, limitOrder.getUnitPrice(), limitOrder.convertToLimitOrderDTO(), marketOrder.convertToMarketOrderDTO());
+        OrderBlotterDTO orderBlotterDTO = marketOrder.isBuyer() ? OrderBlotterDTO.createOrderBlotter(delta, limitOrder.getUnitPrice(), marketOrder.convertToMarketOrderDTO(), limitOrder.convertToLimitOrderDTO(), this.id) :
+                OrderBlotterDTO.createOrderBlotter(delta, limitOrder.getUnitPrice(), limitOrder.convertToLimitOrderDTO(), marketOrder.convertToMarketOrderDTO(), this.id);
         marketQuotation.update(orderBlotterDTO);
         AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, orderBlotterDTO));
         AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
@@ -318,7 +318,7 @@ public class MarketDepth {
         int delta = Math.min(buyer_order.getCount(), seller_order.getCount());
         decreaseLimitOrderCount(buyer_order, delta);
         decreaseLimitOrderCount(seller_order, delta);
-        OrderBlotterDTO orderBlotterDTO = OrderBlotterDTO.createOrderBlotter(delta, calculatePrice(buyer_order, seller_order), buyer_order.convertToLimitOrderDTO(), seller_order.convertToLimitOrderDTO());
+        OrderBlotterDTO orderBlotterDTO = OrderBlotterDTO.createOrderBlotter(delta, calculatePrice(buyer_order, seller_order), buyer_order.convertToLimitOrderDTO(), seller_order.convertToLimitOrderDTO(), this.id);
         marketQuotation.update(orderBlotterDTO);
         AggregateLifecycle.apply(new IssueOrderBlotterEvent(id, orderBlotterDTO));
         AggregateLifecycle.apply(new MarketDepthChangedEvent(id));
