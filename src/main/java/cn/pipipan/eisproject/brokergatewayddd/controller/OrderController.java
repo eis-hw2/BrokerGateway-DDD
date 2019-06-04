@@ -38,6 +38,7 @@ public class OrderController {
     @PostMapping("/limitOrders")
     public Response<LimitOrderDTO> processLimitOrder(@RequestBody LimitOrderDTO limitOrderDTO){
         completeOrder(limitOrderDTO);
+        limitOrderDTO.setCount(limitOrderDTO.getTotalCount());
         try{
             commandGateway.send(new IssueLimitOrderCommand(limitOrderDTO.getMarketDepthId(), limitOrderDTO)).get();
             LimitOrderDTO res = limitOrderDTORepository.save(limitOrderDTO);
@@ -52,6 +53,7 @@ public class OrderController {
     @PostMapping("/marketOrders")
     public Response<MarketOrderDTO> processMarketOrder(@RequestBody MarketOrderDTO marketOrderDTO){
         completeOrder(marketOrderDTO);
+        marketOrderDTO.setCount(marketOrderDTO.getTotalCount());
         try {
             commandGateway.send(new IssueMarketOrderCommand(marketOrderDTO.getMarketDepthId(), marketOrderDTO)).get();
             MarketOrderDTO res = marketOrderDTORepository.save(marketOrderDTO);

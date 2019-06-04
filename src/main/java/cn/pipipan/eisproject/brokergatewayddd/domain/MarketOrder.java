@@ -35,7 +35,16 @@ public class MarketOrder {
     private Side side;
     private Status status;
     private String creationTime;
+    private int totalCount;
     String traderName;
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
 
     public String getTraderName() {
         return traderName;

@@ -29,7 +29,15 @@ public class MarketOrderDTO implements OrderDTO{
     private String creationTime;
     String traderName;
     private Status status;
+    private int totalCount;
 
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
 
     public String getTraderName() {
         return traderName;

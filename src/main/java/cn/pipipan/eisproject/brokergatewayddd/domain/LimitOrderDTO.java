@@ -27,6 +27,7 @@ public class LimitOrderDTO implements OrderDTO{
     @ApiModelProperty(required = true)
     private String marketDepthId;
     @ApiModelProperty(required = true)
+    private int totalCount;
     private int count;
     @ApiModelProperty(required = true)
     private int unitPrice;
@@ -95,6 +96,14 @@ public class LimitOrderDTO implements OrderDTO{
 
     public void setSide(Side side) {
         this.side = side;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
     }
 
     public void setId(String id) {

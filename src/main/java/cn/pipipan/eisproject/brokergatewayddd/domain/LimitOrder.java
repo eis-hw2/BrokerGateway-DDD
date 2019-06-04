@@ -23,12 +23,21 @@ public class LimitOrder {
 
     private String id;
     private String marketDepthId;
+    private int totalCount;
     private int count;
     private int unitPrice;
     private Side side;
     private Status status;
     private String creationTime;
     String traderName;
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
 
     public String getTraderName() {
         return traderName;
