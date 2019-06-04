@@ -1,16 +1,17 @@
 package cn.pipipan.eisproject.brokergatewayddd.controller;
 
-import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.*;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueCancelOrderCommand;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueLimitOrderCommand;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueMarketOrderCommand;
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.command.IssueStopOrderCommand;
 import cn.pipipan.eisproject.brokergatewayddd.domain.*;
 import cn.pipipan.eisproject.brokergatewayddd.helper.Util;
-import cn.pipipan.eisproject.brokergatewayddd.repository.CancelOrderRepository;
-import cn.pipipan.eisproject.brokergatewayddd.repository.LimitOrderDTORepository;
-import cn.pipipan.eisproject.brokergatewayddd.repository.MarketOrderDTORepository;
-import cn.pipipan.eisproject.brokergatewayddd.repository.StopOrderRepository;
+import cn.pipipan.eisproject.brokergatewayddd.repository.*;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,8 @@ public class OrderController {
     CancelOrderRepository cancelOrderRepository;
     @Autowired
     StopOrderRepository stopOrderRepository;
+    @Autowired
+    FutureDTORepository futureDTORepository;
 
     @PostMapping("/limitOrders")
     public Response<LimitOrderDTO> processLimitOrder(@RequestBody LimitOrderDTO limitOrderDTO){
@@ -105,6 +108,17 @@ public class OrderController {
         addCreationTime(orderDTO);
         addTraderName(orderDTO);
         addStatus(orderDTO);
+        addMarketDepthId(orderDTO);
+    }
+
+    private void addMarketDepthId(OrderDTO orderDTO) {
+        String futureName = orderDTO.getFutureName();
+        orderDTO.setMarketDepthId(getMarketDepthId(futureName));
+    }
+
+    @Cacheable(key = "#p0")
+    public String getMarketDepthId(String futureName){
+        return futureDTORepository.findFutureDTOByDescriptionEquals(futureName).getMarketDepthId();
     }
 
     private void addStatus(OrderDTO orderDTO) {

@@ -8,4 +8,6 @@ public interface OrderDTO {
     public String getId();
     public String getMarketDepthId();
     public void setStatus(Status waiting);
+    public String getFutureName();
+    public void setMarketDepthId(String marketDepthId);
 }

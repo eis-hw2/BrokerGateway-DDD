@@ -12,6 +12,7 @@ public class StopOrder implements OrderDTO{
     @ApiModelProperty(required = true)
     Type targetType;
     @ApiModelProperty(required = true)
+    private String futureName;
     String marketDepthId;
     @ApiModelProperty(required = true)
     int count;
@@ -23,7 +24,15 @@ public class StopOrder implements OrderDTO{
     int stopPrice;
     Status status;
     private String creationTime;
-    String traderName;
+    private String traderName;
+
+    public String getFutureName() {
+        return futureName;
+    }
+
+    public void setFutureName(String futureName) {
+        this.futureName = futureName;
+    }
 
     public String getTraderName() {
         return traderName;

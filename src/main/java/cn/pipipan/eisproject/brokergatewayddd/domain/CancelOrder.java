@@ -16,11 +16,19 @@ public class CancelOrder implements OrderDTO{
     @ApiModelProperty(required = true)
     String targetId;
     @ApiModelProperty(required = true)
+    private String futureName;
     String marketDepthId;
     Status status;
     String creationTime;
     String traderName;
 
+    public String getFutureName() {
+        return futureName;
+    }
+
+    public void setFutureName(String futureName) {
+        this.futureName = futureName;
+    }
     public String getTraderName() {
         return traderName;
     }

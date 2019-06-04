@@ -25,6 +25,7 @@ public class LimitOrderDTO implements OrderDTO{
     @Id
     private String id;
     @ApiModelProperty(required = true)
+    private String futureName;
     private String marketDepthId;
     @ApiModelProperty(required = true)
     private int totalCount;
@@ -35,8 +36,15 @@ public class LimitOrderDTO implements OrderDTO{
     private Side side;
     private Status status;
     private String creationTime;
-    String traderName;
+    private String traderName;
 
+    public String getFutureName() {
+        return futureName;
+    }
+
+    public void setFutureName(String futureName) {
+        this.futureName = futureName;
+    }
     public String getTraderName() {
         return traderName;
     }

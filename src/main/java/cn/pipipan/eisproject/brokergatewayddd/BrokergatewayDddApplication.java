@@ -10,6 +10,7 @@ import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.spring.eventsourcing.SpringAggregateSnapshotter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @SpringBootApplication
+@Cacheable
 public class BrokergatewayDddApplication {
     public static ApplicationContext ac;
     @Bean

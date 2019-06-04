@@ -1,6 +1,7 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
 import cn.pipipan.eisproject.brokergatewayddd.util.DTOConvert;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,11 +26,15 @@ public class MarketOrderDTO implements OrderDTO{
     String id;
     private String marketDepthId;
     private int count;
+    @ApiModelProperty(required = true)
     private Side side;
     private String creationTime;
-    String traderName;
+    private String traderName;
     private Status status;
+    @ApiModelProperty(required = true)
     private int totalCount;
+    @ApiModelProperty(required = true)
+    private String futureName;
 
     public int getTotalCount() {
         return totalCount;
@@ -66,6 +71,14 @@ public class MarketOrderDTO implements OrderDTO{
 
     public String getId() {
         return id;
+    }
+
+    public String getFutureName() {
+        return futureName;
+    }
+
+    public void setFutureName(String futureName) {
+        this.futureName = futureName;
     }
 
     @Override

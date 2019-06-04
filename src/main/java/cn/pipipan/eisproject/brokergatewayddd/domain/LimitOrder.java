@@ -29,10 +29,18 @@ public class LimitOrder {
     private Side side;
     private Status status;
     private String creationTime;
-    String traderName;
+    private String traderName;
+    private String futureName;
 
     public int getTotalCount() {
         return totalCount;
+    }
+    public String getFutureName() {
+        return futureName;
+    }
+
+    public void setFutureName(String futureName) {
+        this.futureName = futureName;
     }
 
     public void setTotalCount(int totalCount) {
