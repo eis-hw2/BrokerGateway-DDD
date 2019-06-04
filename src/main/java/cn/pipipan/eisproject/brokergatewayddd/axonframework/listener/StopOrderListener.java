@@ -1,5 +1,6 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.listener;
 
+import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.IssueStopOrderEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.StopOrderCancelledEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.StopOrderConvertedEvent;
 import cn.pipipan.eisproject.brokergatewayddd.domain.Status;
@@ -17,10 +18,10 @@ public class StopOrderListener {
     @Autowired
     StopOrderRepository stopOrderRepository;
 
-//    @EventHandler
-//    public void on(IssueStopOrderEvent issueStopOrderEvent){
-//        stopOrderRepository.save(issueStopOrderEvent.getStopOrder());
-//    }
+    @EventHandler
+    public void on(IssueStopOrderEvent issueStopOrderEvent){
+        stopOrderRepository.save(issueStopOrderEvent.getStopOrder());
+    }
 
     @EventHandler
     public void on(StopOrderConvertedEvent stopOrderConvertedEvent){
