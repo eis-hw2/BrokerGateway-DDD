@@ -1,21 +1,17 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.event;
 
+import cn.pipipan.eisproject.brokergatewayddd.domain.LimitOrderDTO;
+
 public class LimitOrderCountDecreasedEvent {
     final String id;
-    final String orderId;
-    final int count;
+    final LimitOrderDTO limitOrderDTO;
 
-    public LimitOrderCountDecreasedEvent(String id, String orderId, int count) {
+    public LimitOrderCountDecreasedEvent(String id, LimitOrderDTO limitOrderDTO) {
         this.id = id;
-        this.orderId = orderId;
-        this.count = count;
+        this.limitOrderDTO = limitOrderDTO;
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public int getCount() {
-        return count;
+    public LimitOrderDTO getLimitOrderDTO(){
+        return this.limitOrderDTO;
     }
 }

@@ -334,7 +334,7 @@ public class MarketDepth {
     private void decreaseMarketOrderCount(MarketOrder marketOrder, int delta) {
         marketOrder.decreaseCount(delta);
         if (marketOrder.getCount() == 0) marketOrders.remove(marketOrder);
-        AggregateLifecycle.apply(new MarketOrderCountDecreasedEvent(id, marketOrder.getId(), delta));
+        AggregateLifecycle.apply(new MarketOrderCountDecreasedEvent(id, marketOrder.convertToMarketOrderDTO()));
     }
 
     private void decreaseLimitOrderCount(LimitOrder limitOrder, int delta) {
@@ -346,7 +346,7 @@ public class MarketDepth {
             limitOrders.remove(0);
             if (limitOrders.isEmpty()) waitingComposites.remove(index);
         }
-        AggregateLifecycle.apply(new LimitOrderCountDecreasedEvent(id, limitOrder.getId(), delta));
+        AggregateLifecycle.apply(new LimitOrderCountDecreasedEvent(id, limitOrder.convertToLimitOrderDTO()));
     }
 
     private boolean isFixed() {

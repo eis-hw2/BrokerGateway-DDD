@@ -1,24 +1,20 @@
 package cn.pipipan.eisproject.brokergatewayddd.axonframework.event;
 
+import cn.pipipan.eisproject.brokergatewayddd.domain.MarketOrderDTO;
+
 public class MarketOrderCountDecreasedEvent {
     final String id;
-    final String orderId;
-    final int delta;
-    public MarketOrderCountDecreasedEvent(String id, String orderId, int delta) {
+    final MarketOrderDTO marketOrderDTO;
+    public MarketOrderCountDecreasedEvent(String id, MarketOrderDTO marketOrderDTO) {
         this.id = id;
-        this.orderId = orderId;
-        this.delta = delta;
+        this.marketOrderDTO = marketOrderDTO;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public int getDelta() {
-        return delta;
+    public MarketOrderDTO getMarketOrderDTO(){
+        return this.marketOrderDTO;
     }
 }

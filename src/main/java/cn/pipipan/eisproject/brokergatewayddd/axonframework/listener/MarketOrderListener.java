@@ -26,10 +26,7 @@ public class MarketOrderListener {
     @EventHandler
     public void on(MarketOrderCountDecreasedEvent marketOrderCountDecreasedEvent){
         //logger.info("LimitOrder decrease count");
-        MarketOrderDTO marketOrderDTO = marketOrderDTORepository.findMarketOrderDTOById(marketOrderCountDecreasedEvent.getOrderId());
-        MarketOrder marketOrder = marketOrderDTO.convertToMarketOrder();
-        marketOrder.decreaseCount(marketOrderCountDecreasedEvent.getDelta());
-        marketOrderDTORepository.save(marketOrder.convertToMarketOrderDTO());
+        marketOrderDTORepository.save(marketOrderCountDecreasedEvent.getMarketOrderDTO());
     }
 
     @EventHandler
