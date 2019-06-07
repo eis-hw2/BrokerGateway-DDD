@@ -359,21 +359,21 @@ public class MarketDepth {
 
     @EventSourcingHandler
     public void on(MarketOpenedEvent marketOpenedEvent){
-        marketQuotation.setId(UUID.randomUUID().toString());
-        marketQuotation.setDate(Util.getNowDate());
-        buyers.clear();
-        sellers.clear();
-        marketOrders.clear();
-        stopOrders.clear();
+        marketQuotation = new MarketQuotation(marketQuotation);
     }
 
     @EventSourcingHandler
     public void on(MarketClosedEvent marketClosedEvent){
+        marketQuotation.setClosePrice(marketQuotation.getCurrentPrice());
         AggregateLifecycle.apply(new IssueMarketQuotationEvent(id, marketQuotation.clone()));
         clearMarket();
     }
 
     private void clearMarket() {
+        buyers.clear();
+        sellers.clear();
+        marketOrders.clear();
+        stopOrders.clear();
 
     }
 }

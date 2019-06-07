@@ -19,16 +19,16 @@ public class Scheduler {
     CommandGateway commandGateway;
 
 
-    @Scheduled(cron = "0 0 15 15 * *")
-    public void scheduleMarketOpen(){
+    @Scheduled(cron = "0 0 23 * * *")
+    public void scheduleMarketClose(){
         List<FutureDTO> futureDTOList = futureDTORepository.findAll();
         futureDTOList.forEach(f -> {
             commandGateway.send(new CloseMarketCommand(f.getMarketDepthId()));
         });
     }
 
-    @Scheduled(cron = "0 30 9 15 * *")
-    public void scheduleMarketClose(){
+    @Scheduled(cron = "0 0 1 * * *")
+    public void scheduleMarketOpen(){
         List<FutureDTO> futureDTOList = futureDTORepository.findAll();
         futureDTOList.forEach(f -> {
             commandGateway.send(new OpenMarketCommand(f.getMarketDepthId()));

@@ -1,9 +1,13 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
+import cn.pipipan.eisproject.brokergatewayddd.helper.Util;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
+@Document
 public class MarketQuotation {
     private float lastClosePrice;
     private float openPrice;
@@ -18,6 +22,7 @@ public class MarketQuotation {
     private float turnoverRate;
     private String date;
     private String marketDepthId;
+    @Id
     private String id;
 
     MarketQuotation(String currentDate, float lastClosePrice, String marketDepthId){
@@ -57,6 +62,13 @@ public class MarketQuotation {
     public MarketQuotation() {
     }
 
+    public MarketQuotation(MarketQuotation other){
+        this.openPrice = other.getClosePrice();
+        this.id = UUID.randomUUID().toString();
+        this.marketDepthId = other.getMarketDepthId();
+        this.date = Util.getNowDate();
+    }
+
     public MarketQuotation clone(){
         MarketQuotation marketQuotation = new MarketQuotation();
         BeanUtils.copyProperties(this, marketQuotation);
@@ -72,7 +84,7 @@ public class MarketQuotation {
     }
 
     public String getId() {
-        return date;
+        return id;
     }
 
     public void setId(String Id) {
@@ -88,7 +100,7 @@ public class MarketQuotation {
     }
 
     public void setClosePrice(float ClosePrice) {
-        this.openPrice= ClosePrice;
+        this.closePrice= ClosePrice;
     }
 
     public float getClosePrice() {
