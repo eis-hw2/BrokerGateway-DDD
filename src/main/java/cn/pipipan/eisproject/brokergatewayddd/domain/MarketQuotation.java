@@ -18,7 +18,8 @@ public class MarketQuotation {
     private float changePrice;
     private float changePercent;
     private int totalVolume;
-    private int totalShare = 1000;
+    private int totalCapital;
+    private int totalShare = 1000000;
     private float turnoverRate;
     private String date;
     private String marketDepthId;
@@ -28,9 +29,9 @@ public class MarketQuotation {
     MarketQuotation(String currentDate, float lastClosePrice, String marketDepthId){
         setDate(currentDate);
         setLastClosePrice(lastClosePrice);
-        setOpenPrice(lastClosePrice);
-        setHighPrice(lastClosePrice);
-        setLowPrice(lastClosePrice);
+        setOpenPrice(0);
+        setHighPrice(0);
+        setLowPrice(0);
         setId(UUID.randomUUID().toString());
         setMarketDepthId(marketDepthId);
     }
@@ -47,14 +48,20 @@ public class MarketQuotation {
         float price = orderBlotter.getPrice();
         int volume = orderBlotter.getCount();
         setTotalVolume(totalVolume+volume);
+        setTotalCapital(totalCapital+volume*price);
         setCurrentPrice(price);
         setChangePrice(currentPrice - lastClosePrice);
         setChangePercent(changePrice / lastClosePrice);
         setTurnoverRate(totalVolume/totalShare);
-        if(price > highPrice || highPrice == 0){
+        if(openPrice == 0){
+            setOpenPrice(price);
+            setLowPrice(price);
             setHighPrice(price);
         }
-        if(price < lowPrice || lowPrice == 0){
+        if(price > highPrice){
+            setHighPrice(price);
+        }
+        if(price < lowPrice){
             setLowPrice(price);
         }
     }
@@ -129,6 +136,14 @@ public class MarketQuotation {
 
     public int getTotalVolume() {
         return totalVolume;
+    }
+
+    public void setTotalCapital(float TotalCapital) {
+        this.totalCapital= TotalCapital;
+    }
+
+    public int getTotalCapital() {
+        return totalCapital;
     }
 
     public void setLastClosePrice(float LastClosePrice) {
