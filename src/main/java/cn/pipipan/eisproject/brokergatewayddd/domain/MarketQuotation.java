@@ -23,6 +23,7 @@ public class MarketQuotation {
     private float turnoverRate;
     private String date;
     private String marketDepthId;
+    private String currentTime;
     @Id
     private String id;
 
@@ -32,6 +33,9 @@ public class MarketQuotation {
         setOpenPrice(0);
         setHighPrice(0);
         setLowPrice(0);
+        setTotalVolume(0);
+        setTotalCapital(0);
+        setCurrentTime(currentDate+" 01:00:00");
         setId(UUID.randomUUID().toString());
         setMarketDepthId(marketDepthId);
     }
@@ -47,6 +51,8 @@ public class MarketQuotation {
     public void update(OrderBlotterDTO orderBlotter){
         float price = orderBlotter.getPrice();
         int volume = orderBlotter.getCount();
+        String time = orderBlotter.getCreationTime();
+        setCurrentTime(time);
         setTotalVolume(totalVolume+volume);
         setTotalCapital(totalCapital+volume*price);
         setCurrentPrice(price);
@@ -96,6 +102,14 @@ public class MarketQuotation {
 
     public void setId(String Id) {
         this.id = Id;
+    }
+
+    public String getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(String CurrentTime) {
+        this.currentTime = CurrentTime;
     }
 
     public void setOpenPrice(float currentOpenPrice) {
