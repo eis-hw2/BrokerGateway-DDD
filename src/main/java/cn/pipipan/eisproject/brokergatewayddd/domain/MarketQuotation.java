@@ -54,7 +54,7 @@ public class MarketQuotation {
         String time = orderBlotter.getCreationTime();
         setCurrentTime(time);
         setTotalVolume(totalVolume+volume);
-        setTotalCapital(totalCapital+volume*price);
+        setTotalCapital((int)(totalCapital+volume*price));
         setCurrentPrice(price);
         setChangePrice(currentPrice - lastClosePrice);
         setChangePercent(changePrice / lastClosePrice);
@@ -152,7 +152,7 @@ public class MarketQuotation {
         return totalVolume;
     }
 
-    public void setTotalCapital(float TotalCapital) {
+    public void setTotalCapital(int TotalCapital) {
         this.totalCapital= TotalCapital;
     }
 
