@@ -11,6 +11,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class MarketDepthListener {
     Logger logger = LoggerFactory.getLogger(MarketDepthListener.class);
@@ -26,6 +28,7 @@ public class MarketDepthListener {
         jsonObject.addProperty("marketQuotation", JSON.toJSONString(marketDepthFixedEvent.getMarketQuotation()));
         jsonObject.addProperty("marketDepth", JSON.toJSONString(marketDepthFixedEvent.getMarketDepthDTO()));
         jsonObject.addProperty("marketDepthId", marketDepthFixedEvent.getMarketQuotation().getMarketDepthId());
+        jsonObject.addProperty("timestamp", new Date().getTime());
         logger.info("jsonObject: {}", jsonObject.toString());
         rabbitTemplate.convertAndSend("marketDepth", "marketDepth", jsonObject.toString());
         marketDepthDTORepository.save(marketDepthFixedEvent.getMarketDepthDTO());
