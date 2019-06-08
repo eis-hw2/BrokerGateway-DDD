@@ -8,6 +8,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class MarketOrderDTO implements OrderDTO{
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
     static class Convert implements DTOConvert<MarketOrderDTO, MarketOrder> {
         @Override
         public MarketOrder convertFrom(MarketOrderDTO marketOrderDTO) {
@@ -35,6 +43,7 @@ public class MarketOrderDTO implements OrderDTO{
     private int totalCount;
     @ApiModelProperty(required = true)
     private String futureName;
+    private String clientId;
 
     public int getTotalCount() {
         return totalCount;
