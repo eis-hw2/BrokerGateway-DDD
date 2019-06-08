@@ -37,6 +37,16 @@ public class LimitOrderDTO implements OrderDTO{
     private Status status;
     private String creationTime;
     private String traderName;
+    @ApiModelProperty(required = true)
+    private String clientId;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
     public String getFutureName() {
         return futureName;

@@ -31,6 +31,15 @@ public class LimitOrder {
     private String creationTime;
     private String traderName;
     private String futureName;
+    private String clientId;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
     public int getTotalCount() {
         return totalCount;
