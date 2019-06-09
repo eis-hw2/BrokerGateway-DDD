@@ -2,10 +2,12 @@ version: "3.3"
 services:
   redis:
     image: redis:alpine
+    container_name: redis
     ports:
       - "6379"
   axonserver:
     image: axoniq/axonserver
+    container_name: axonserver
     hostname: axonserver
     ports:
       - "8024"
@@ -14,6 +16,7 @@ services:
       - AXONSERVER_HOSTNAME=axonserver
   rabbitmq:
     image: rabbitmq:management
+    container_name: rabbitmq
     ports:
       - "4369"
       - "5671"
@@ -22,10 +25,12 @@ services:
       - "15672"
   mongo:
     image: mongo
+    container_name: mongo
     ports:
       - "30259:27017"
-  broket-gateway:
+  broker-gateway:
     image: registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway:master
+    container_name: broker-gateway
     ports:
       - "30251:8080"
     links:
@@ -38,24 +43,27 @@ services:
       - rabbitmq
       - redis
       - mongo
-  broket-gateway-query:
+  broker-gateway-query:
     image: registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway-query:master
+    container_name: broker-gateway-query
     ports:
       - "30252:8080"
     links:
       - mongo
     depends_on:
       - mongo
-  broket-gateway-authorize:
+  broker-gateway-authorize:
     image: registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway-authorize:master
+    container_name: broker-gateway-authorize
     ports:
       - "30253:8080"
     links:
       - mongo
     depends_on:
       - mongo
-  broket-gateway-websocket:
+  broker-gateway-websocket:
     image: registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway-websocket:master
+    container_name: broker-gateway-websocker
     ports:
       - "30254:8080"
     links:
