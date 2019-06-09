@@ -1,0 +1,64 @@
+version: "3.3"
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379"
+  axonserver:
+    image: axoniq/axonserver
+    hostname: axonserver
+    ports:
+      - "8024"
+      - "8124"
+    environment:
+      - AXONSERVER_HOSTNAME=axonserver
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "4369"
+      - "5671"
+      - "5672"
+      - "15671"
+      - "15672"
+  mongo:
+    image: mongo
+    ports:
+      - "30259:27017"
+  broket-gateway:
+    image: registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway:master
+    ports:
+      - "30251:8080"
+    links:
+      - axonserver
+      - rabbitmq
+      - redis
+      - mongo
+    depends_on:
+      - axonserver
+      - rabbitmq
+      - redis
+      - mongo
+  broket-gateway-query:
+    image: registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway-query:master
+    ports:
+      - "30252:8080"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+  broket-gateway-authorize:
+    image: registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway-authorize:master
+    ports:
+      - "30253:8080"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+  broket-gateway-websocket:
+    image: registry.cn-shenzhen.aliyuncs.com/pipipan/broker-gateway-websocket:master
+    ports:
+      - "30254:8080"
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
