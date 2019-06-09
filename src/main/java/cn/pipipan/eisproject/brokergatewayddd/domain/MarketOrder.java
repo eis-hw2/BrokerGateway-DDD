@@ -10,6 +10,14 @@ public class MarketOrder {
         if (count == 0) this.status = Status.FINISHED;
     }
 
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
 
     static class Convert implements DTOConvert<MarketOrder, MarketOrderDTO> {
         @Override
@@ -34,6 +42,7 @@ public class MarketOrder {
     private String creationTime;
     private int totalCount;
     private String traderName;
+    private String clientId;
 
     public String getFutureName() {
         return futureName;

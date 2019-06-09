@@ -25,6 +25,8 @@ public class StopOrder implements OrderDTO{
     Status status;
     private String creationTime;
     private String traderName;
+    private String clientId;
+
 
     public String getFutureName() {
         return futureName;
@@ -133,5 +135,13 @@ public class StopOrder implements OrderDTO{
 
     public boolean isSeller() {
         return this.side.equals(Side.SELLER);
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 }
