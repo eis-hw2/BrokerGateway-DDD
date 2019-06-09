@@ -39,6 +39,15 @@ public class LimitOrderDTO implements OrderDTO{
     private String traderName;
     @ApiModelProperty(required = true)
     private String clientId;
+    private String statusSwitchTime;
+
+    public String getStatusSwitchTime() {
+        return statusSwitchTime;
+    }
+
+    public void setStatusSwitchTime(String statusSwitchTime) {
+        this.statusSwitchTime = statusSwitchTime;
+    }
 
     public String getClientId() {
         return clientId;

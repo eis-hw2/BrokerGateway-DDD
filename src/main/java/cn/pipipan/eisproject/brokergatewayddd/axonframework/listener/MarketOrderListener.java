@@ -4,13 +4,15 @@ import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.IssueMarketOrd
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.MarketOrderCancelledEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.MarketOrderCountDecreasedEvent;
 import cn.pipipan.eisproject.brokergatewayddd.axonframework.event.StopOrderToMarketOrderConvertedEvent;
-import cn.pipipan.eisproject.brokergatewayddd.domain.MarketOrder;
 import cn.pipipan.eisproject.brokergatewayddd.domain.MarketOrderDTO;
 import cn.pipipan.eisproject.brokergatewayddd.domain.Status;
+import cn.pipipan.eisproject.brokergatewayddd.helper.Util;
 import cn.pipipan.eisproject.brokergatewayddd.repository.MarketOrderDTORepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 @Component
 public class MarketOrderListener {
@@ -25,23 +27,22 @@ public class MarketOrderListener {
 
     @EventHandler
     public void on(MarketOrderCountDecreasedEvent marketOrderCountDecreasedEvent){
-        //logger.info("LimitOrder decrease count");
-        marketOrderDTORepository.save(marketOrderCountDecreasedEvent.getMarketOrderDTO());
+        MarketOrderDTO marketOrderDTO = marketOrderCountDecreasedEvent.getMarketOrderDTO();
+        marketOrderDTO.setStatusSwitchTime(Util.getDate(new Date()));
+        marketOrderDTORepository.save(marketOrderDTO);
     }
 
     @EventHandler
     public void on(MarketOrderCancelledEvent marketOrderCancelledEvent){
         MarketOrderDTO marketOrderDTO = marketOrderDTORepository.findMarketOrderDTOById(marketOrderCancelledEvent.getMarketOrderId());
-        MarketOrder marketOrder = marketOrderDTO.convertToMarketOrder();
-        marketOrder.setStatus(Status.CANCELLED);
-        marketOrderDTORepository.save(marketOrder.convertToMarketOrderDTO());
+        marketOrderDTO.setStatus(Status.CANCELLED);
+        marketOrderDTO.setStatusSwitchTime(Util.getDate(new Date()));
+        marketOrderDTORepository.save(marketOrderDTO);
     }
 
     @EventHandler
     public void on(StopOrderToMarketOrderConvertedEvent stopOrderToMarketOrderConvertedEvent){
         MarketOrderDTO marketOrderDTO = stopOrderToMarketOrderConvertedEvent.getMarketOrderDTO();
-        MarketOrder marketOrder = marketOrderDTO.convertToMarketOrder();
-        marketOrder.setStatus(Status.WAITING);
-        marketOrderDTORepository.save(marketOrder.convertToMarketOrderDTO());
+        marketOrderDTORepository.save(marketOrderDTO);
     }
 }

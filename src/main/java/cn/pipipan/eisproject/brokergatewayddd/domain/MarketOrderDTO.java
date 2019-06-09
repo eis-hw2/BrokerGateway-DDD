@@ -45,6 +45,15 @@ public class MarketOrderDTO implements OrderDTO{
     private String futureName;
     @ApiModelProperty(required = true)
     private String clientId;
+    private String statusSwitchTime;
+
+    public String getStatusSwitchTime() {
+        return statusSwitchTime;
+    }
+
+    public void setStatusSwitchTime(String statusSwitchTime) {
+        this.statusSwitchTime = statusSwitchTime;
+    }
 
     public int getTotalCount() {
         return totalCount;

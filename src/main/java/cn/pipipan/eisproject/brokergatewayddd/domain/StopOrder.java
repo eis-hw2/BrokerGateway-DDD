@@ -1,9 +1,12 @@
 package cn.pipipan.eisproject.brokergatewayddd.domain;
 
+import cn.pipipan.eisproject.brokergatewayddd.helper.Util;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
 
 @Document
 public class StopOrder implements OrderDTO{
@@ -27,6 +30,15 @@ public class StopOrder implements OrderDTO{
     private String traderName;
     @ApiModelProperty(required = true)
     private String clientId;
+    private String statusSwitchTime;
+
+    public String getStatusSwitchTime() {
+        return statusSwitchTime;
+    }
+
+    public void setStatusSwitchTime(String statusSwitchTime) {
+        this.statusSwitchTime = statusSwitchTime;
+    }
 
 
     public String getFutureName() {
@@ -58,6 +70,8 @@ public class StopOrder implements OrderDTO{
         LimitOrder limitOrder = new LimitOrder();
         BeanUtils.copyProperties(this, limitOrder);
         limitOrder.setTotalCount(this.getCount());
+        limitOrder.setCreationTime(Util.getNowDate());
+        limitOrder.setStatus(Status.WAITING);
         return limitOrder;
     }
 
@@ -65,6 +79,8 @@ public class StopOrder implements OrderDTO{
         MarketOrder marketOrder = new MarketOrder();
         BeanUtils.copyProperties(this, marketOrder);
         marketOrder.setTotalCount(this.getCount());
+        marketOrder.setCreationTime(Util.getDate(new Date()));
+        marketOrder.setStatus(Status.WAITING);
         return marketOrder;
     }
 

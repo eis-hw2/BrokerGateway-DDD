@@ -21,6 +21,15 @@ public class CancelOrder implements OrderDTO{
     Status status;
     String creationTime;
     String traderName;
+    String statusSwitchTime;
+
+    public String getStatusSwitchTime() {
+        return statusSwitchTime;
+    }
+
+    public void setStatusSwitchTime(String statusSwitchTime) {
+        this.statusSwitchTime = statusSwitchTime;
+    }
 
     public String getFutureName() {
         return futureName;
