@@ -8,23 +8,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class StopOrder implements OrderDTO{
     @Id
-    String id;
+    private String id;
     @ApiModelProperty(required = true)
-    Type targetType;
+    private Type targetType;
     @ApiModelProperty(required = true)
     private String futureName;
     String marketDepthId;
     @ApiModelProperty(required = true)
-    int count;
+    private int count;
     @ApiModelProperty(required = true)
-    Side side;
+    private Side side;
     @ApiModelProperty(notes = "如果是MarketOrder就不需要，如果是LimitOrder就需要", required = true)
-    int unitPrice;
+    private int unitPrice;
     @ApiModelProperty(required = true, notes = "止损价格")
-    int stopPrice;
+    private int stopPrice;
     Status status;
     private String creationTime;
     private String traderName;
+    @ApiModelProperty(required = true)
     private String clientId;
 
 

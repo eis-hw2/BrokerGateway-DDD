@@ -43,6 +43,7 @@ public class MarketOrderDTO implements OrderDTO{
     private int totalCount;
     @ApiModelProperty(required = true)
     private String futureName;
+    @ApiModelProperty(required = true)
     private String clientId;
 
     public int getTotalCount() {
