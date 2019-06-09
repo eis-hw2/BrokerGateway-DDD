@@ -29,11 +29,11 @@ public class MarketDepth {
         public MarketDepthDTO convertFrom(MarketDepth marketDepth) {
             MarketDepthDTO marketDepthDTO = new MarketDepthDTO();
             marketDepthDTO.id = marketDepth.id;
-            for (int i = marketDepth.buyers.size() - 1; i >= Math.max(0, marketDepth.buyers.size() - 3); i--) {
+            for (int i = marketDepth.buyers.size() - 1; i >= Math.max(0, marketDepth.buyers.size() - 5); i--) {
                 OrderPriceComposite orderPriceComposite = buyers.get(i);
                 marketDepthDTO.addBuyer(orderPriceComposite.getLimitOrders().stream().mapToInt(LimitOrder::getCount).sum(), orderPriceComposite.getPrice());
             }
-            for (int i = 0; i < Math.min(3, marketDepth.sellers.size()); i++) {
+            for (int i = 0; i < Math.min(5, marketDepth.sellers.size()); i++) {
                 OrderPriceComposite orderPriceComposite = sellers.get(i);
                 marketDepthDTO.addSeller(orderPriceComposite.getLimitOrders().stream().mapToInt(LimitOrder::getCount).sum(), orderPriceComposite.getPrice());
             }
