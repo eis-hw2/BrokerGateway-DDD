@@ -57,12 +57,14 @@ public class StopOrder implements OrderDTO{
     public LimitOrder convertToLimitOrder(){
         LimitOrder limitOrder = new LimitOrder();
         BeanUtils.copyProperties(this, limitOrder);
+        limitOrder.setTotalCount(this.getCount());
         return limitOrder;
     }
 
     public MarketOrder convertToMarketOrder(){
         MarketOrder marketOrder = new MarketOrder();
         BeanUtils.copyProperties(this, marketOrder);
+        marketOrder.setTotalCount(this.getCount());
         return marketOrder;
     }
 
