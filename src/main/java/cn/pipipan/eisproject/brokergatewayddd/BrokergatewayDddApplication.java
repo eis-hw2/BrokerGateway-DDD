@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -32,6 +33,7 @@ public class BrokergatewayDddApplication {
     }
 
     @Bean
+    @Primary
     public Serializer serializer(XStream xStream) {
         return XStreamSerializer.builder().xStream(xStream).build();
     }
