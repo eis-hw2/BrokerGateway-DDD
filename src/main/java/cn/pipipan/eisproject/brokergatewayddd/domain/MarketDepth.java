@@ -327,7 +327,12 @@ public class MarketDepth {
     private int calculatePrice(LimitOrder buyer_order, LimitOrder seller_order) {
         Date buyer_order_date = Util.parseString(buyer_order.getCreationTime());
         Date seller_order_date = Util.parseString(seller_order.getCreationTime());
-        return buyer_order_date.before(seller_order_date) ? buyer_order.getUnitPrice() : seller_order.getUnitPrice();
+        try {
+            return buyer_order_date.before(seller_order_date) ? buyer_order.getUnitPrice() : seller_order.getUnitPrice();
+        }
+        catch (Exception e){
+            return buyer_order.getUnitPrice();
+        }
     }
 
 
