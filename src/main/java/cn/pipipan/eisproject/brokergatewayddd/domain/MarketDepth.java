@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
-@Aggregate(snapshotTriggerDefinition = "mySnapshotTriggerDefinition")
+@Aggregate
 public class MarketDepth {
     Logger logger = LoggerFactory.getLogger(MarketDepth.class);
     @Autowired
