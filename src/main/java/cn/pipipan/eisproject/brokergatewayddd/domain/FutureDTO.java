@@ -10,14 +10,14 @@ public class FutureDTO {
     String description;
 
     public String getMarketDepthId() {
-        return MarketDepthId;
+        return marketDepthId;
     }
 
     public void setMarketDepthId(String marketDepthId) {
-        MarketDepthId = marketDepthId;
+        this.marketDepthId = marketDepthId;
     }
 
-    String MarketDepthId;
+    String marketDepthId;
 
     public String getId() {
         return id;

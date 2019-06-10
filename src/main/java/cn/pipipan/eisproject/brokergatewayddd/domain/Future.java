@@ -13,7 +13,7 @@ import org.springframework.beans.BeanUtils;
 public class Future {
     @AggregateIdentifier
     String id;
-    String MarketDepthId;
+    String marketDepthId;
     String description;
 
     @CommandHandler
@@ -45,11 +45,11 @@ public class Future {
     }
 
     public String getMarketDepthId() {
-        return MarketDepthId;
+        return marketDepthId;
     }
 
     public void setMarketDepthId(String marketDepthId) {
-        MarketDepthId = marketDepthId;
+        this.marketDepthId = marketDepthId;
     }
 
     public String getDescription() {
