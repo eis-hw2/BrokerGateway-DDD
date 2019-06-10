@@ -18,7 +18,7 @@ public class StopOrder implements OrderDTO{
     private String futureName;
     String marketDepthId;
     @ApiModelProperty(required = true)
-    private int count;
+    private int totalCount;
     @ApiModelProperty(required = true)
     private Side side;
     @ApiModelProperty(notes = "如果是MarketOrder就不需要，如果是LimitOrder就需要", required = true)
@@ -69,7 +69,7 @@ public class StopOrder implements OrderDTO{
     public LimitOrder convertToLimitOrder(){
         LimitOrder limitOrder = new LimitOrder();
         BeanUtils.copyProperties(this, limitOrder);
-        limitOrder.setTotalCount(this.getCount());
+        limitOrder.setCount(this.getTotalCount());
         limitOrder.setCreationTime(Util.getDate(new Date()));
         limitOrder.setStatus(Status.WAITING);
         return limitOrder;
@@ -78,7 +78,7 @@ public class StopOrder implements OrderDTO{
     public MarketOrder convertToMarketOrder(){
         MarketOrder marketOrder = new MarketOrder();
         BeanUtils.copyProperties(this, marketOrder);
-        marketOrder.setTotalCount(this.getCount());
+        marketOrder.setCount(this.getTotalCount());
         marketOrder.setCreationTime(Util.getDate(new Date()));
         marketOrder.setStatus(Status.WAITING);
         return marketOrder;
@@ -108,12 +108,12 @@ public class StopOrder implements OrderDTO{
         this.marketDepthId = marketDepthId;
     }
 
-    public int getCount() {
-        return count;
+    public int getTotalCount() {
+        return totalCount;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
     }
 
     public Side getSide() {
