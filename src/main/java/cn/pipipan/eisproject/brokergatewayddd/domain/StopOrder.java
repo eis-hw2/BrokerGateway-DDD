@@ -70,7 +70,7 @@ public class StopOrder implements OrderDTO{
         LimitOrder limitOrder = new LimitOrder();
         BeanUtils.copyProperties(this, limitOrder);
         limitOrder.setTotalCount(this.getCount());
-        limitOrder.setCreationTime(Util.getNowDate());
+        limitOrder.setCreationTime(Util.getDate(new Date()));
         limitOrder.setStatus(Status.WAITING);
         return limitOrder;
     }
