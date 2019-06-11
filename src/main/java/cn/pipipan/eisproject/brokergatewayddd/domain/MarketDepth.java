@@ -274,14 +274,18 @@ public class MarketDepth {
         }
     }
 
+    // cur >= buy_limit or cur <= sell_limit
     private void dealWithStopOrders() {
-        int buyer_price = getFirstBuyer().getUnitPrice();
-        int seller_price = getFirstSeller().getUnitPrice();
+        int currentPrice = (int)marketQuotation.getCurrentPrice();
+        int buyerCurrentComparePrice = currentPrice == 0 ? Integer.MIN_VALUE :
+                currentPrice;
+        int sellerCurrentComparePrice = currentPrice == 0 ? Integer.MAX_VALUE :
+                currentPrice;
         Iterator<StopOrder> iterator = stopOrders.iterator();
         while(iterator.hasNext()){
             StopOrder stopOrder = iterator.next();
-            if ((stopOrder.isBuyer() && stopOrder.getStopPrice() >= seller_price)
-                || (stopOrder.isSeller() && stopOrder.getStopPrice() <= buyer_price)) {
+            if ((stopOrder.isBuyer() && stopOrder.getStopPrice() <= buyerCurrentComparePrice)
+                || (stopOrder.isSeller() && stopOrder.getStopPrice() >= sellerCurrentComparePrice)) {
                 //logger.info("get the converted order");
                 switch (stopOrder.getTargetType()){
                     case LimitOrder:
@@ -299,8 +303,6 @@ public class MarketDepth {
             }
         }
     }
-
-
 
     private void dealWithMarketOrders(MarketOrder marketOrder, LimitOrder limitOrder) {
         int delta = Math.min(marketOrder.getCount(), limitOrder.getCount());
